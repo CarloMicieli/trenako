@@ -5,8 +5,6 @@
 [![CI (Rust)](https://github.com/CarloMicieli/trenako/actions/workflows/rust-ci.yml/badge.svg)](https://github.com/CarloMicieli/trenako/actions/workflows/rust-ci.yml)
 [![codecov](https://codecov.io/gh/CarloMicieli/trenako/branch/dev/graph/badge.svg?token=i8xoC46ZYN)](https://codecov.io/gh/CarloMicieli/trenako)
 
-<img src="./.images/crab.jpeg" width="200pt" alt="Crab with trains!">
-
 A website for model railway collectors.
 
 ## Features

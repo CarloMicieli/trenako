@@ -65,6 +65,7 @@ Cargo commands
 |----------------------------------|------------------------------------|
 | `cargo make run`                 | run the app                        |
 | `cargo make test`                | run the tests                      |
+| `cargo make e2e-test`            | run the E2E tests                  |
 | `cargo make fmt-check`           | check the formatting               |
 | `cargo make clippy`              | run the linter                     |
 | `cargo make docs`                | generate the rustdoc               |
