@@ -1,12 +1,13 @@
 # syntax=docker/dockerfile:1
 ARG RUST_VERSION=1.92.0
-ARG RUST_IMAGE_SHA256=a8ce22642819f5f54d37e025f7020b51dcbac39e5d0ea907a63eda8b03458de5
+ARG RUST_IMAGE_SHA256=3d0d1a335e1d1220d416a1f38f29925d40ec9929d3c83e07a263adf30a7e4aa3
 ARG APP_NAME=trenako-server
 ARG RUNTIME_IMAGE_SHA256=45287d89d96414e57c7705aa30cb8f9836ef30ae8897440dd8f06c4cff801eec
 
 ################################################################################
 # Create a stage for building the application.
-FROM rust:${RUST_VERSION}-bookworm@sha256:${RUST_IMAGE_SHA256} as build
+FROM rust:${RUST_VERSION}-bookworm@sha256:${RUST_IMAGE_SHA256} AS build
+ARG TARGETPLATFORM
 ARG APP_NAME
 WORKDIR /app
 
@@ -28,6 +29,12 @@ RUN --mount=type=bind,source=crates,target=crates \
     --mount=type=cache,target=/usr/local/cargo/registry/ \
     <<EOF
 set -e
+
+RUN apt-get update && apt-get install -y \
+    pkg-config \
+    libssl-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 cargo install sqlx-cli --no-default-features --features native-tls,postgres
 EOF
 
@@ -41,7 +48,7 @@ EOF
 # By specifying the "3.18" tag, it will use version 3.18 of alpine. If
 # reproducability is important, consider using a digest
 # (e.g., alpine@sha256:664888ac9cfd28068e062c991ebcff4b4c7307dc8dd4df9e728bedde5c449d91).
-FROM debian:bookworm-slim@sha256:${RUNTIME_IMAGE_SHA256} as runtime
+FROM debian:bookworm-slim@sha256:${RUNTIME_IMAGE_SHA256} AS runtime
 LABEL maintainer="Carlo Micieli <mail@trenako.com>"
 LABEL description="The trenako database migrations"
 
