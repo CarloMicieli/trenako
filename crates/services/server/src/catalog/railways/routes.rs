@@ -4,7 +4,7 @@ use axum::routing::get;
 use axum::Router;
 
 pub const RAILWAY_ROOT_API: &str = "/api/railways";
-pub const RAILWAY_API: &str = "/api/railways/:railwayId";
+pub const RAILWAY_API: &str = "/api/railways/{railwayId}";
 
 pub fn railways_router() -> Router<AppState> {
     Router::new()

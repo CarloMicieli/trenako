@@ -4,7 +4,7 @@ use axum::routing::{delete, get};
 use axum::Router;
 
 pub const BRANDS_ROOT_API: &str = "/api/brands";
-pub const BRAND_ROOT_API: &str = "/api/brands/:brand_id";
+pub const BRAND_ROOT_API: &str = "/api/brands/{brand_id}";
 
 pub fn brands_router() -> Router<AppState> {
     Router::new()

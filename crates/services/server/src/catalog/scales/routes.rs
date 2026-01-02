@@ -4,7 +4,7 @@ use axum::routing::{delete, get};
 use axum::Router;
 
 pub const SCALE_ROOT_API: &str = "/api/scales";
-pub const SCALE_API: &str = "/api/scales/:scale_id";
+pub const SCALE_API: &str = "/api/scales/{scale_id}";
 
 pub fn scales_router() -> Router<AppState> {
     Router::new()

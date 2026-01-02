@@ -4,9 +4,9 @@ use axum::routing::{get, post};
 use axum::Router;
 
 pub const CATALOG_ITEMS_ROOT_API: &str = "/api/catalog-items";
-pub const CATALOG_ITEM_ROOT_API: &str = "/api/catalog-items/:catalogItemId";
-pub const ROLLING_STOCKS_ROOT_API: &str = "/api/catalog-items/:catalogItemId/rolling-stocks";
-pub const ROLLING_STOCK_ROOT_API: &str = "/api/catalog-items/:catalogItemId/rolling-stocks/:rollingStockId";
+pub const CATALOG_ITEM_ROOT_API: &str = "/api/catalog-items/{catalogItemId}";
+pub const ROLLING_STOCKS_ROOT_API: &str = "/api/catalog-items/{catalogItemId}/rolling-stocks";
+pub const ROLLING_STOCK_ROOT_API: &str = "/api/catalog-items/{catalogItemId}/rolling-stocks/{rollingStockId}";
 
 pub fn catalog_items_router() -> Router<AppState> {
     Router::new()
