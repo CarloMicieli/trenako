@@ -22,15 +22,15 @@ jobs:
 
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup the rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@1.92.0
 
       - name: Install cargo make
-        uses: davidB/cargo-make-rs@v1
+        uses: taiki-e/install-action@v2
         with:
-          version: '0.37.24'
+          tool: cargo-make@0.37.24
 
       - name: Set up cargo cache
         uses: Swatinem/rust-cache@v2

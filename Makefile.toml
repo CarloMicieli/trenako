@@ -36,8 +36,8 @@ env = { "SQLX_OFFLINE" = "true" }
 command = "cargo"
 args = ["test", "--lib", "--no-fail-fast", "--", "--test-threads", "4"]
 
-[tasks.integration-test]
-description = "test: run the integration tests"
+[tasks.e2e-test]
+description = "test: run the e2e tests"
 category = "Check"
 env = { "SQLX_OFFLINE" = "true", "TEST_LOG" = "true" }
 command = "cargo"
