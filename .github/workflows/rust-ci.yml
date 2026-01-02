@@ -39,7 +39,9 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install cargo make
-        run: cargo install cargo-make@0.37.24
+        uses: davidB/cargo-make-rs@v1
+        with:
+          version: '0.37.24'
 
       - name: Set up cargo cache
         uses: Swatinem/rust-cache@v2
