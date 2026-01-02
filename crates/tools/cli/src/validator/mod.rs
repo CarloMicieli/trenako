@@ -97,9 +97,9 @@ impl Error {
 fn json_schema_from_str(input: &str) -> Result<Validator, ValidatorError> {
     let schema = serde_json::from_str(input)?;
     Validator::options()
-      .with_draft(Draft::Draft7)
-      .build(&schema)
-      .map_err(|_| ValidatorError::InvalidSchema)
+        .with_draft(Draft::Draft7)
+        .build(&schema)
+        .map_err(|_| ValidatorError::InvalidSchema)
 }
 
 #[derive(Debug, Error)]
