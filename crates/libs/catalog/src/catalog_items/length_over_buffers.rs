@@ -76,16 +76,12 @@ impl Validate for LengthOverBuffers {
     fn validate(&self) -> Result<(), ValidationErrors> {
         let mut errors = ValidationErrors::new();
 
-        if let Some(inches) = self.inches {
-            if let Err(error) = validate_length_range(&inches, Some(dec!(0.1)), Some(dec!(999.0))) {
-                errors.add("inches", error);
-            }
+        if let Some(inches) = self.inches && let Err(error) = validate_length_range(&inches, Some(dec!(0.1)), Some(dec!(999.0))) {
+            errors.add("inches", error);
         }
 
-        if let Some(millimeters) = self.millimeters {
-            if let Err(error) = validate_length_range(&millimeters, Some(dec!(0.1)), Some(dec!(9999.0))) {
-                errors.add("millimeters", error);
-            }
+        if let Some(millimeters) = self.millimeters && let Err(error) = validate_length_range(&millimeters, Some(dec!(0.1)), Some(dec!(9999.0))) {
+            errors.add("millimeters", error);
         }
 
         if errors.is_empty() {

@@ -29,8 +29,7 @@ impl<Id: Debug + Eq + Hash, T: Debug + Clone> InMemoryRepository<Id, T> {
     /// Returns true if the in-memory repository contains the id
     pub fn contains(&self, id: &Id) -> bool {
         let items = self.storage.lock().expect("unable to acquire the items lock");
-        let result = items.borrow().contains_key(id);
-        result
+        items.borrow().contains_key(id)
     }
 
     /// Adds a new element to the in-memory repository
@@ -42,22 +41,19 @@ impl<Id: Debug + Eq + Hash, T: Debug + Clone> InMemoryRepository<Id, T> {
     /// Returns the number of elements in the in-memory repository
     pub fn len(&self) -> usize {
         let items = self.storage.lock().expect("unable to acquire the items lock");
-        let result = items.borrow().len();
-        result
+        items.borrow().len()
     }
 
     /// Returns true if the in-memory repository contains no elements.
     pub fn is_empty(&self) -> bool {
         let items = self.storage.lock().expect("unable to acquire the items lock");
-        let result = items.borrow().is_empty();
-        result
+        items.borrow().is_empty()
     }
 
     /// Find the item with the `id` id (if any)
     pub fn find_by_id(&self, id: &Id) -> Option<T> {
         let items = self.storage.lock().expect("unable to acquire the items lock");
-        let result = items.borrow().get(id).cloned();
-        result
+        items.borrow().get(id).cloned()
     }
 }
 

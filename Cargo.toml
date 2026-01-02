@@ -12,7 +12,7 @@ resolver = "2"
 [workspace.package]
 authors         = ["CarloMicieli <piovarolo@gmail.com>"]
 documentation   = "https://github.com/CarloMicieli/trenako"
-edition         = "2021"
+edition         = "2024"
 homepage        = "https://github.com/CarloMicieli/trenako"
 license         = "Apache-2.0"
 readme          = "README.md"
