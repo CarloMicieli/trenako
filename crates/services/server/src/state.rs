@@ -14,7 +14,7 @@ impl AppState {
         AppState { pg_pool }
     }
 
-    pub fn get_database(&self) -> PgDatabase {
+    pub fn get_database(&self) -> PgDatabase<'_> {
         PgDatabase::new(&self.pg_pool)
     }
 }

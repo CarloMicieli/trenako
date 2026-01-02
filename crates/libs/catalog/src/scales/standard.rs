@@ -1,6 +1,5 @@
 //! the scale standards enum
 
-use sqlx::postgres::{PgHasArrayType, PgTypeInfo};
 use sqlx::Type;
 use strum_macros;
 use strum_macros::{Display, EnumString};
@@ -29,13 +28,6 @@ pub enum Standard {
     #[serde(rename = "NMRA")]
     #[sqlx(rename = "NMRA")]
     NMRA,
-}
-
-// See https://github.com/launchbadge/sqlx/issues/1004
-impl PgHasArrayType for Standard {
-    fn array_type_info() -> PgTypeInfo {
-        PgTypeInfo::with_name("_scale_standard")
-    }
 }
 
 #[cfg(test)]

@@ -29,7 +29,7 @@ env:
 
 jobs:
   checks:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout source code
@@ -39,7 +39,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install cargo make
-        run: cargo install cargo-make@0.37.16
+        run: cargo install cargo-make@0.37.24
 
       - name: Set up cargo cache
         uses: Swatinem/rust-cache@v2

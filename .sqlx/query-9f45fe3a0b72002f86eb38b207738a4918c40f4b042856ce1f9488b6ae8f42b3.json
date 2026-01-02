@@ -71,7 +71,7 @@
         "name": "standards!: Vec<Standard>",
         "type_info": {
           "Custom": {
-            "name": "_scale_standard",
+            "name": "scale_standard[]",
             "kind": {
               "Array": {
                 "Custom": {

@@ -38,13 +38,12 @@ impl JsonSchemaValidator {
         let result = self.0.validate(&input_json);
         let result = if let Err(validation_errors) = result {
             let mut errors = Vec::new();
-            for validation_error in validation_errors {
-                let error = Error::new(
-                    &validation_error.instance_path.to_string(),
-                    &validation_error.to_string(),
-                );
-                errors.push(error);
-            }
+            // `jsonschema::ValidationError` changed shape in newer versions
+            // and is not directly iterable. Aggregate the validation
+            // information into a single error message to keep behavior
+            // deterministic across versions.
+            let error = Error::new("", &validation_errors.to_string());
+            errors.push(error);
 
             let Resource {
                 file_name,
@@ -97,11 +96,10 @@ impl Error {
 
 fn json_schema_from_str(input: &str) -> Result<Validator, ValidatorError> {
     let schema = serde_json::from_str(input)?;
-    let compiled = Validator::options()
-        .with_draft(Draft::Draft7)
-        .build(&schema)
-        .map_err(|_| ValidatorError::InvalidSchema);
-    compiled
+    Validator::options()
+      .with_draft(Draft::Draft7)
+      .build(&schema)
+      .map_err(|_| ValidatorError::InvalidSchema)
 }
 
 #[derive(Debug, Error)]

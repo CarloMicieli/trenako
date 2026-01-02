@@ -129,7 +129,7 @@ impl TryInto<RollingStockRequest> for CsvRecord {
                 technical_specifications: tech_specs,
                 type_name: self.type_name,
                 road_number: self.road_number,
-                series: self.series.map(String::from),
+                series: self.series,
                 passenger_car_type: PassengerCarType::from_str(&self.subcategory).ok(),
                 service_level: self.service_level,
             },

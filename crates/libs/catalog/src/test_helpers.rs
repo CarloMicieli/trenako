@@ -1,4 +1,5 @@
 use fake::{Fake, StringFaker};
+use std::borrow::Cow;
 use std::collections::HashMap;
 use validator::{ValidationErrors, ValidationErrorsKind};
 
@@ -10,7 +11,7 @@ pub fn random_str(len: usize) -> String {
 
 pub fn unwrap_map<F>(errors: &ValidationErrors, f: F)
 where
-    F: FnOnce(HashMap<&'static str, ValidationErrorsKind>),
+    F: FnOnce(HashMap<Cow<'_, str>, ValidationErrorsKind>),
 {
     let errors = errors.clone();
     f(errors.errors().clone());
