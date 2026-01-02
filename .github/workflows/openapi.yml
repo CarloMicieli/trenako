@@ -14,7 +14,7 @@ env:
 
 jobs:
   validate:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout source code
@@ -35,7 +35,7 @@ jobs:
         run: openapi-generator-cli validate -i openapi/openapi.yaml
 
   docker:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: validate
     if: github.ref == 'refs/heads/main'
 
