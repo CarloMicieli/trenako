@@ -47,6 +47,7 @@ validator           = { workspace = true }
 
 [dev-dependencies]
 dockertest          = { workspace = true }
+handlebars          = { workspace = true }
 isocountry          = { workspace = true }
 pretty_assertions   = { workspace = true }
 reqwest             = { workspace = true }

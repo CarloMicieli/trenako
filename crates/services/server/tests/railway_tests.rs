@@ -1,7 +1,8 @@
 pub mod common;
 
 use crate::common::seeding::seed_railways;
-use crate::common::{create_docker_test, spawn_app, IMAGE_NAME};
+use crate::common::templates::{render, setup_hbs};
+use crate::common::{IMAGE_NAME, create_docker_test, spawn_app};
 use ::common::contacts::{MailAddress, PhoneNumber};
 use ::common::length::Length;
 use ::common::measure_units::MeasureUnit;
@@ -38,43 +39,9 @@ async fn it_should_return_409_when_the_railway_already_exists() {
 
         let railway_name = "FS";
 
-        let request = json!({
-            "name" : railway_name,
-            "abbreviation" : "rr",
-            "registered_company_name" : "Rust Raiload & Co",
-            "organization_entity_type" : "STATE_OWNED_ENTERPRISE",
-            "description" : {
-                "de": "beschreibung",
-                "en" : "description",
-                "fr": "description",
-                "it" : "descrizione"
-            },
-            "country" : "US",
-            "period_of_activity" : {
-                "status" : "ACTIVE",
-                "operating_since" : "1900-01-01"
-            },
-            "gauge" : {
-                "meters": 1.435,
-                "track_gauge": "STANDARD"
-            },
-            "total_length" : {
-                "miles": 621.371,
-                "kilometers": 10000
-            },
-            "contact_info" : {
-                "email" : "mail@mail.com",
-                "phone" : "+14152370800",
-                "website_url" : "https://www.site.com"
-            },
-            "socials" : {
-                "facebook" : "facebook_handler",
-                "instagram" : "instagram_handler",
-                "linkedin" : "linkedin_handler",
-                "twitter" : "twitter_handler",
-                "youtube" : "youtube_handler"
-            }
-        });
+        let reg = setup_hbs();
+        let data = json!({"railway_name": railway_name});
+        let request = render(reg, "railways", data);
 
         let endpoint = sut.endpoint(API_RAILWAYS);
         let response = client
@@ -104,44 +71,9 @@ async fn it_should_create_new_railways() {
         let railway_id = RailwayId::new(&railway_name);
         let expected_location = format!("{}/{}", API_RAILWAYS, railway_id);
 
-        let request = json!({
-            "name" : railway_name,
-            "abbreviation" : "rr",
-            "registered_company_name" : "Rust Raiload & Co",
-            "organization_entity_type" : "STATE_OWNED_ENTERPRISE",
-            "description" : {
-                "de": "beschreibung",
-                "en" : "description",
-                "fr": "description",
-                "it" : "descrizione"
-            },
-            "country" : "US",
-            "period_of_activity" : {
-                "status" : "ACTIVE",
-                "operating_since" : "1900-01-01"
-            },
-            "gauge" : {
-                "meters": 1.435,
-                "track_gauge": "STANDARD"
-            },
-            "headquarters" : [ "Some City" ],
-            "total_length" : {
-                "miles": 621.371,
-                "kilometers": 10000
-            },
-            "contact_info" : {
-                "email" : "mail@mail.com",
-                "phone" : "+14152370800",
-                "website_url" : "https://www.site.com"
-            },
-            "socials" : {
-                "facebook" : "facebook_handler",
-                "instagram" : "instagram_handler",
-                "linkedin" : "linkedin_handler",
-                "twitter" : "twitter_handler",
-                "youtube" : "youtube_handler"
-            }
-        });
+        let reg = setup_hbs();
+        let data = json!({"railway_name": railway_name});
+        let request = render(reg, "railways", data);
 
         let endpoint = sut.endpoint(API_RAILWAYS);
         let response = client

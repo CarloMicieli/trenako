@@ -1,5 +1,5 @@
 use crate::common::seeding::{seed_brands, seed_catalog_items, seed_railways, seed_scales};
-use crate::common::{create_docker_test, spawn_app, IMAGE_NAME};
+use crate::common::{IMAGE_NAME, create_docker_test, spawn_app};
 use catalog::brands::brand_id::BrandId;
 use catalog::catalog_items::availability_status::AvailabilityStatus;
 use catalog::catalog_items::catalog_item::CatalogItem;
@@ -24,6 +24,7 @@ use rust_decimal_macros::dec;
 use serde_json::json;
 use sqlx::PgPool;
 use std::str::FromStr;
+use crate::common::templates::{render, setup_hbs};
 
 pub mod common;
 
@@ -284,55 +285,9 @@ async fn it_should_return_422_when_the_railway_is_not_found() {
         seed_brands(&pg_pool).await;
         seed_scales(&pg_pool).await;
 
-        let request = json!({
-            "brand" : "ACME",
-            "item_number" : "123456",
-            "category" : "LOCOMOTIVES",
-            "scale" : "H0",
-            "power_method" : "DC",
-            "epoch": "V",
-            "description" : {
-                "it" : "Locomotiva elettrica E 402A 015 nella livrea di origine rosso/bianco, pantografi 52 Sommerfeldt"
-            },
-            "details" : {
-                "it" : "Motore a 5 poli"
-            },
-            "delivery_date" : "2005",
-            "availability_status" : "AVAILABLE",
-            "count" : 1,
-            "rolling_stocks": [{
-                "category" : "LOCOMOTIVE",
-                "class_name" : "E402 A",
-                "road_number" : "E402 026",
-                "series" : "PRIMA SERIE",
-                "locomotive_type" : "ELECTRIC_LOCOMOTIVE",
-                "railway" : "FS",
-                "epoch" : "Vb",
-                "livery" : "rosso/bianco",
-                "depot" : "Milano Smistamento",
-                "dcc_interface" : "MTC_21",
-                "control" : "DCC_READY",
-                "length_over_buffers" : {
-                  "millimeters" : 220.0,
-                  "inches": 8.66142
-                },
-                "technical_specifications" : {
-                  "coupling" : {
-                    "socket" : "NEM_362",
-                    "close_couplers" : "YES",
-                    "digital_shunting" : "NO"
-                  },
-                  "flywheel_fitted" : "NO",
-                  "body_shell" : "PLASTIC",
-                  "chassis" : "METAL_DIE_CAST",
-                  "minimum_radius": 360.0,
-                  "interior_lights" : "NO",
-                  "lights" : "YES",
-                  "sprung_buffers" : "NO"
-                },
-                "is_dummy" : false
-              }]
-        });
+        let reg = setup_hbs();
+        let data = json!({});
+        let request = render(reg, "catalog_items", data);
 
         let client = reqwest::Client::new();
         let endpoint = sut.endpoint(API_CATALOG_ITEMS);
@@ -366,56 +321,9 @@ async fn it_should_create_a_new_locomotive() {
         let catalog_item_id = CatalogItemId::from_str("acme-123456").unwrap();
         let expected_location = format!("{}/{}", API_CATALOG_ITEMS, catalog_item_id);
 
-        let request = json!({
-            "brand" : "ACME",
-            "item_number" : "123456",
-            "category" : "LOCOMOTIVES",
-            "scale" : "H0",
-            "power_method" : "DC",
-            "epoch": "V",
-            "description" : {
-                "en" : "Electric Locomotive E 402A 015",
-                "it" : "Locomotiva elettrica E 402A 015 nella livrea di origine rosso/bianco, pantografi 52 Sommerfeldt"
-            },
-            "details" : {
-                "en" : "5-poles motor",
-                "it" : "Motore a 5 poli"
-            },
-            "delivery_date" : "2005",
-            "availability_status" : "AVAILABLE",
-            "count" : 1,
-            "rolling_stocks": [{
-                "category" : "LOCOMOTIVE",
-                "class_name" : "E402 A",
-                "road_number" : "E402 026",
-                "series" : "PRIMA SERIE",
-                "locomotive_type" : "ELECTRIC_LOCOMOTIVE",
-                "railway" : "FS",
-                "livery" : "rosso/bianco",
-                "depot" : "Milano Smistamento",
-                "dcc_interface" : "MTC_21",
-                "control" : "DCC_READY",
-                "length_over_buffers" : {
-                  "millimeters" : 220.0,
-                  "inches": 8.66142
-                },
-                "technical_specifications" : {
-                  "coupling" : {
-                    "socket" : "NEM_362",
-                    "close_couplers" : "YES",
-                    "digital_shunting" : "NO"
-                  },
-                  "flywheel_fitted" : "NO",
-                  "body_shell" : "PLASTIC",
-                  "chassis" : "METAL_DIE_CAST",
-                  "minimum_radius": 360.0,
-                  "interior_lights" : "NO",
-                  "lights" : "YES",
-                  "sprung_buffers" : "NO"
-                },
-                "is_dummy" : false
-              }]
-        });
+        let reg = setup_hbs();
+        let data = json!({});
+        let request = render(reg, "catalog_items", data);
 
         let client = reqwest::Client::new();
         let endpoint = sut.endpoint(API_CATALOG_ITEMS);

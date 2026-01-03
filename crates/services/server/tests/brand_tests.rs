@@ -1,7 +1,8 @@
 pub mod common;
 
 use crate::common::seeding::seed_brands;
-use crate::common::{create_docker_test, spawn_app, IMAGE_NAME};
+use crate::common::templates::{render, setup_hbs};
+use crate::common::{IMAGE_NAME, create_docker_test, spawn_app};
 use ::common::contacts::{MailAddress, PhoneNumber};
 use ::common::organizations::OrganizationEntityType;
 use ::common::socials::Handler;
@@ -33,40 +34,10 @@ async fn it_should_return_409_when_the_brand_already_exists() {
 
         let brand_name = "ACME";
 
-        let request = json!({
-            "name" : brand_name,
-            "registered_company_name" : "Registered Company Ltd",
-            "organization_entity_type" : "LIMITED_COMPANY",
-            "group_name": "UNKNOWN",
-            "description" : {
-                "de": "beschreibung",
-                "en" : "description",
-                "fr": "description",
-                "it" : "descrizione"
-            },
-            "address" : {
-                "street_address" : "Rue Morgue 22",
-                "extended_address" : null,
-                "postal_code" : "1H2 4BB",
-                "city" : "London",
-                "region" : null,
-                "country" : "GB"
-            },
-            "contact_info" : {
-                "email" : "mail@mail.com",
-                "phone" : "+14152370800",
-                "website_url" : "https://www.site.com"
-            },
-            "socials" : {
-                "facebook" : "facebook_handler",
-                "instagram" : "instagram_handler",
-                "linkedin" : "linkedin_handler",
-                "twitter" : "twitter_handler",
-                "youtube" : "youtube_handler"
-            },
-            "kind" : "INDUSTRIAL",
-            "status" : "ACTIVE"
-        });
+        let reg = setup_hbs();
+        let data = json!({"brand_name": brand_name});
+        let request = render(reg, "brands", data);
+
         let endpoint = sut.endpoint(API_BRANDS);
         let response = client
             .post(endpoint)
@@ -94,40 +65,9 @@ async fn it_should_create_new_brands() {
         let brand_name = Uuid::new_v4().to_string();
         let expected_location = format!("{}/{}", API_BRANDS, brand_name);
 
-        let request = json!({
-            "name" : brand_name,
-            "registered_company_name" : "Registered Company Ltd",
-            "organization_entity_type" : "LIMITED_COMPANY",
-            "group_name": "UNKNOWN",
-            "description" : {
-                "de": "beschreibung",
-                "en" : "description",
-                "fr": "description",
-                "it" : "descrizione"
-            },
-            "address" : {
-                "street_address" : "Rue Morgue 22",
-                "extended_address" : "Apartment 42",
-                "postal_code" : "1H2 4BB",
-                "city" : "London",
-                "region" : "REG",
-                "country" : "GB"
-            },
-            "contact_info" : {
-                "email" : "mail@mail.com",
-                "phone" : "+14152370800",
-                "website_url" : "https://www.site.com"
-            },
-            "socials" : {
-                "facebook" : "facebook_handler",
-                "instagram" : "instagram_handler",
-                "linkedin" : "linkedin_handler",
-                "twitter" : "twitter_handler",
-                "youtube" : "youtube_handler"
-            },
-            "kind" : "INDUSTRIAL",
-            "status" : "ACTIVE"
-        });
+        let reg = setup_hbs();
+        let data = json!({"brand_name": brand_name});
+        let request = render(reg, "brands", data);
 
         let endpoint = sut.endpoint(API_BRANDS);
         let response = client

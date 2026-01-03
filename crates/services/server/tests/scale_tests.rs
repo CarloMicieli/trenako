@@ -1,7 +1,8 @@
 pub mod common;
 
 use crate::common::seeding::seed_scales;
-use crate::common::{create_docker_test, spawn_app, IMAGE_NAME};
+use crate::common::templates::{render, setup_hbs};
+use crate::common::{IMAGE_NAME, create_docker_test, spawn_app};
 use ::common::length::Length;
 use ::common::measure_units::MeasureUnit;
 use catalog::common::TrackGauge;
@@ -34,22 +35,10 @@ async fn it_should_return_409_when_the_scale_already_exists() {
         seed_scales(&pg_pool).await;
 
         let scale_name = "H0";
-        let request = json!({
-            "name" : scale_name,
-            "ratio" : 87.0,
-            "gauge" : {
-                "millimeters" : 16.5,
-                "inches" : 0.65,
-                "track_gauge" : "STANDARD"
-            },
-            "description" : {
-                "de": "beschreibung",
-                "en" : "description",
-                "fr": "description",
-                "it" : "descrizione"
-            },
-            "standards" : ["NEM", "NMRA"]
-        });
+
+        let reg = setup_hbs();
+        let data = json!({"scale_name": scale_name});
+        let request = render(reg, "scales", data);
 
         let endpoint = sut.endpoint(API_SCALES);
         let response = client
@@ -84,22 +73,9 @@ async fn it_should_create_new_scales() {
         let gauge_mm = Decimal::from_str_exact("16.5").unwrap();
         let gauge_in = Decimal::from_str_exact("0.65").unwrap();
 
-        let request = json!({
-            "name" : scale_name,
-            "ratio" : 87.0,
-            "gauge" : {
-                "millimeters" : 16.5,
-                "inches" : 0.65,
-                "track_gauge" : "STANDARD"
-            },
-            "description" : {
-                "de": "beschreibung",
-                "en" : "description",
-                "fr": "description",
-                "it" : "descrizione"
-            },
-            "standards" : ["NEM", "NMRA"]
-        });
+        let reg = setup_hbs();
+        let data = json!({"scale_name": scale_name});
+        let request = render(reg, "scales", data);
 
         let endpoint = sut.endpoint(API_SCALES);
         let response = client
