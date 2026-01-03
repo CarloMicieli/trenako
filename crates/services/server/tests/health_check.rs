@@ -1,6 +1,6 @@
 pub mod common;
 
-use crate::common::{create_docker_test, spawn_app, IMAGE_NAME};
+use crate::common::{IMAGE_NAME, create_docker_test, spawn_app};
 
 #[tokio::test]
 async fn health_check_works() {

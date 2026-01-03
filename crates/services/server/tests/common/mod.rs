@@ -10,6 +10,7 @@ pub const IMAGE_NAME: &str = "postgres";
 
 pub mod database;
 pub mod seeding;
+pub mod templates;
 
 #[derive(Debug)]
 pub struct ServiceUnderTest {

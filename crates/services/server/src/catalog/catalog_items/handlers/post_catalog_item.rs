@@ -2,10 +2,10 @@ use crate::catalog::catalog_items::routes::CATALOG_ITEMS_ROOT_API;
 use crate::state::AppState;
 use crate::web::problem::ProblemDetail;
 use crate::web::responders::{Created, ToProblemDetail};
-use axum::extract::State;
 use axum::Json;
+use axum::extract::State;
 use catalog::catalog_items::catalog_item_request::CatalogItemRequest;
-use catalog::catalog_items::commands::new_catalog_item::{create_new_catalog_item, CatalogItemCreationError};
+use catalog::catalog_items::commands::new_catalog_item::{CatalogItemCreationError, create_new_catalog_item};
 use data::catalog::catalog_item::repositories::{CatalogItemsRepository, RollingStocksRepository};
 use uuid::Uuid;
 

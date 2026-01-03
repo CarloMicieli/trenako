@@ -1,7 +1,7 @@
 //! the scale gauge
 
 use crate::common::TrackGauge;
-use common::length::{validate_length_range, Length};
+use common::length::{Length, validate_length_range};
 use common::measure_units::MeasureUnit;
 use common::measure_units::MeasureUnit::Millimeters;
 use rust_decimal::Decimal;
@@ -37,11 +37,7 @@ impl Validate for Gauge {
             errors.add("inches", error);
         }
 
-        if errors.is_empty() {
-            Ok(())
-        } else {
-            Err(errors)
-        }
+        if errors.is_empty() { Ok(()) } else { Err(errors) }
     }
 }
 

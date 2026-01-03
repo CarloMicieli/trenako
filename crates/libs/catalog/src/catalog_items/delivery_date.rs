@@ -1,7 +1,7 @@
 //! the catalog item delivery date
 
 use serde::de::{Unexpected, Visitor};
-use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
+use serde::{Deserialize, Deserializer, Serialize, Serializer, de};
 use std::fmt;
 use std::fmt::Formatter;
 use std::str;

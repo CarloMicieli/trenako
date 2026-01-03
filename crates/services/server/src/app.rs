@@ -2,16 +2,16 @@ use crate::catalog::catalog_router;
 use crate::health_check;
 use crate::state::AppState;
 use axum;
-use axum::routing::get;
 use axum::Router;
+use axum::routing::get;
 use configuration::Settings;
 use hyper::http::HeaderName;
 use tokio::net::TcpListener;
+use tower_http::LatencyUnit;
 use tower_http::compression::CompressionLayer;
 use tower_http::propagate_header::PropagateHeaderLayer;
 use tower_http::request_id::{MakeRequestUuid, SetRequestIdLayer};
 use tower_http::trace::{DefaultMakeSpan, DefaultOnRequest, DefaultOnResponse, TraceLayer};
-use tower_http::LatencyUnit;
 use tracing::Level;
 
 /// Run the web server

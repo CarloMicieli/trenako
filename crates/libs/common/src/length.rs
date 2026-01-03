@@ -1,8 +1,8 @@
 //! the module includes everything related to lengths
 
 use crate::measure_units::MeasureUnit;
-use rust_decimal::prelude::{ToPrimitive, Zero};
 use rust_decimal::Decimal;
+use rust_decimal::prelude::{ToPrimitive, Zero};
 use std::borrow::Cow;
 use std::cmp;
 use std::cmp::Ordering;

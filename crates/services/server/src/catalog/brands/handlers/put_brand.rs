@@ -1,7 +1,7 @@
 use crate::state::AppState;
+use axum::Json;
 use axum::extract::{Path, State};
 use axum::response::IntoResponse;
-use axum::Json;
 use catalog::brands::brand_id::BrandId;
 use catalog::brands::brand_request::BrandRequest;
 

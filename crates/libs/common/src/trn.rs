@@ -1,7 +1,7 @@
 use lazy_static::lazy_static;
 use regex::Regex;
 use serde::de::{Unexpected, Visitor};
-use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
+use serde::{Deserialize, Deserializer, Serialize, Serializer, de};
 use std::cmp::Ordering;
 use std::fmt;
 use std::str::FromStr;

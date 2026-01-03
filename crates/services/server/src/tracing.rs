@@ -1,6 +1,6 @@
 use configuration::{LoggingFormat, LoggingLevel, LoggingSettings};
-use tracing::level_filters::LevelFilter;
 use tracing::Subscriber;
+use tracing::level_filters::LevelFilter;
 use tracing_subscriber::EnvFilter;
 
 pub fn init_tracing(logging_settings: &LoggingSettings) {

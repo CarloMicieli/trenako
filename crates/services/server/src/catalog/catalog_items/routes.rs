@@ -1,7 +1,7 @@
 use crate::catalog::catalog_items::handlers;
 use crate::state::AppState;
-use axum::routing::{get, post};
 use axum::Router;
+use axum::routing::{get, post};
 
 pub const CATALOG_ITEMS_ROOT_API: &str = "/api/catalog-items";
 pub const CATALOG_ITEM_ROOT_API: &str = "/api/catalog-items/{catalogItemId}";

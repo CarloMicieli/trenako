@@ -1,7 +1,7 @@
 use crate::catalog::railways::handlers;
 use crate::state::AppState;
-use axum::routing::get;
 use axum::Router;
+use axum::routing::get;
 
 pub const RAILWAY_ROOT_API: &str = "/api/railways";
 pub const RAILWAY_API: &str = "/api/railways/{railwayId}";

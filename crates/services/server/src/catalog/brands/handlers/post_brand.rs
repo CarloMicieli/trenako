@@ -2,10 +2,10 @@ use crate::catalog::brands::routes::BRANDS_ROOT_API;
 use crate::state::AppState;
 use crate::web::problem::ProblemDetail;
 use crate::web::responders::{Created, ToProblemDetail};
-use axum::extract::State;
 use axum::Json;
+use axum::extract::State;
 use catalog::brands::brand_request::BrandRequest;
-use catalog::brands::commands::new_brand::{create_new_brand, BrandCreationError};
+use catalog::brands::commands::new_brand::{BrandCreationError, create_new_brand};
 use data::catalog::brands::repositories::BrandsRepository;
 use uuid::Uuid;
 

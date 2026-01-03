@@ -30,7 +30,9 @@ fn it_should_parse_a_single_locomotive_from_csv_files() {
     assert_eq!(1, catalog_items.len());
 
     let rivarossi_hr2934 = &catalog_items[0];
-    let rivarossi_hr2934_description = Some(String::from("FS, locomotiva elettrica E.645, 1a serie, livrea castano/Isabella con logo FS semplificato, pantografi 42U, ep. IV-V"));
+    let rivarossi_hr2934_description = Some(String::from(
+        "FS, locomotiva elettrica E.645, 1a serie, livrea castano/Isabella con logo FS semplificato, pantografi 42U, ep. IV-V",
+    ));
     assert_eq!("Rivarossi/Hornby", rivarossi_hr2934.brand);
     assert_eq!(ItemNumber::new("HR2934"), rivarossi_hr2934.item_number);
     assert_eq!(Category::Locomotives, rivarossi_hr2934.category);
@@ -135,7 +137,9 @@ fn it_should_parse_multiple_passenger_cars_from_csv_files() {
     assert_eq!(1, catalog_items.len());
 
     let rivarossi_hr4324 = &catalog_items[0];
-    let rivarossi_hr4324_description = Some(String::from("FS, set di 4 carrozze “Treno Azzurro”, composto da 2 carrozze di 1a classe tipo 1946 Az13010 e 2 carrozze di 2a classe tipo 1946 Bz33010, una con scompartimento ristoro, ep. IIIb"));
+    let rivarossi_hr4324_description = Some(String::from(
+        "FS, set di 4 carrozze “Treno Azzurro”, composto da 2 carrozze di 1a classe tipo 1946 Az13010 e 2 carrozze di 2a classe tipo 1946 Bz33010, una con scompartimento ristoro, ep. IIIb",
+    ));
     assert_eq!("Rivarossi/Hornby", rivarossi_hr4324.brand);
     assert_eq!(ItemNumber::new("HR4324"), rivarossi_hr4324.item_number);
     assert_eq!(Category::PassengerCars, rivarossi_hr4324.category);
@@ -382,7 +386,9 @@ fn it_should_parse_a_single_freight_car_from_csv_files() {
     assert_eq!(1, catalog_items.len());
 
     let rivarossi_hr6613 = &catalog_items[0];
-    let rivarossi_hr6613_description = Some(String::from("CEMAT, carro porta container a 4 assi tipo Sgnss, livrea verde, nuovo logo CEMAT, caricato con un container “Nothegger” da 45 piedi, ep. VI"));
+    let rivarossi_hr6613_description = Some(String::from(
+        "CEMAT, carro porta container a 4 assi tipo Sgnss, livrea verde, nuovo logo CEMAT, caricato con un container “Nothegger” da 45 piedi, ep. VI",
+    ));
     assert_eq!("Rivarossi/Hornby", rivarossi_hr6613.brand);
     assert_eq!(ItemNumber::new("HR6613"), rivarossi_hr6613.item_number);
     assert_eq!(Category::FreightCars, rivarossi_hr6613.category);

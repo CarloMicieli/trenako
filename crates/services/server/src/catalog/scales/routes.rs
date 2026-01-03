@@ -1,7 +1,7 @@
 use crate::catalog::scales::handlers;
 use crate::state::AppState;
-use axum::routing::{delete, get};
 use axum::Router;
+use axum::routing::{delete, get};
 
 pub const SCALE_ROOT_API: &str = "/api/scales";
 pub const SCALE_API: &str = "/api/scales/{scale_id}";

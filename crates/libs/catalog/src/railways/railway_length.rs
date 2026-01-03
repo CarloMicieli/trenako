@@ -1,6 +1,6 @@
 //! the railway total length
 
-use common::length::{validate_length_range, Length};
+use common::length::{Length, validate_length_range};
 use common::measure_units::MeasureUnit;
 use rust_decimal::Decimal;
 use rust_decimal_macros::dec;
@@ -32,11 +32,7 @@ impl Validate for RailwayLength {
             errors.add("miles", error);
         }
 
-        if errors.is_empty() {
-            Ok(())
-        } else {
-            Err(errors)
-        }
+        if errors.is_empty() { Ok(()) } else { Err(errors) }
     }
 }
 

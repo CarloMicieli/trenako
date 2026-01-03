@@ -454,7 +454,7 @@ mod test {
         use crate::brands::brand_id::BrandId;
         use crate::catalog_items::catalog_item_id::CatalogItemId;
         use crate::catalog_items::commands::new_catalog_item::test::{catalog_item, new_catalog_item};
-        use crate::catalog_items::commands::new_catalog_item::{create_new_catalog_item, CatalogItemCreationError};
+        use crate::catalog_items::commands::new_catalog_item::{CatalogItemCreationError, create_new_catalog_item};
         use crate::catalog_items::commands::repositories::in_memory::{
             InMemoryCatalogItemRepository, InMemoryRollingStockRepository,
         };

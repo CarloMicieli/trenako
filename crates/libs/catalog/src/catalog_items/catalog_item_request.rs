@@ -52,7 +52,7 @@ mod test {
         use crate::catalog_items::catalog_item_request::CatalogItemRequest;
         use crate::catalog_items::category::Category;
         use crate::catalog_items::epoch::Epoch;
-        use crate::catalog_items::item_number::{invalid_item_number, ItemNumber};
+        use crate::catalog_items::item_number::{ItemNumber, invalid_item_number};
         use crate::catalog_items::power_method::PowerMethod;
         use crate::catalog_items::rolling_stock_request::data::{
             freight_car_request, locomotive_request, passenger_car_request,

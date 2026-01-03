@@ -1,6 +1,6 @@
 use crate::hateoas::links::{Link, LinkRelation};
-use axum::response::{IntoResponse, Response};
 use axum::Json;
+use axum::response::{IntoResponse, Response};
 use serde::Serialize;
 
 /// A trait for representation models to collect links.

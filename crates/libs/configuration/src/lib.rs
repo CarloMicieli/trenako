@@ -3,8 +3,8 @@
 use config::{Config, Environment, File};
 use secrecy::{ExposeSecret, SecretString};
 use serde::{Deserialize, Serialize};
-use sqlx::postgres::{PgConnectOptions, PgPoolOptions, PgSslMode};
 use sqlx::PgPool;
+use sqlx::postgres::{PgConnectOptions, PgPoolOptions, PgSslMode};
 
 /// It represents the settings for the service
 #[derive(Serialize, Deserialize, Debug)]

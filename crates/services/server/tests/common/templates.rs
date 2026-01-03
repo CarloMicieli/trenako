@@ -37,6 +37,15 @@ pub fn setup_hbs() -> &'static Handlebars<'static> {
             )
             .unwrap();
         registry
+            .register_template_string(
+                "catalog_items",
+                include_str!(concat!(
+                env!("CARGO_MANIFEST_DIR"),
+                "/tests/resources/catalog_items_request.json.hbs"
+                )),
+            )
+            .unwrap();
+        registry
     })
 }
 
@@ -44,6 +53,5 @@ pub fn render(registry: &'static Handlebars<'static>, template_name: &str, data:
     let rendered = registry
         .render(template_name, &data)
         .expect("Failed to render template.");
-    println!("rend: {}", rendered);
     serde_json::from_str(&rendered).expect("Failed to deserialize template.")
 }

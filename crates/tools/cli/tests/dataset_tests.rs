@@ -1,5 +1,5 @@
-use cli::dataset::Dataset;
 use cli::CliError;
+use cli::dataset::Dataset;
 use pretty_assertions::assert_eq;
 
 const DATASET_ROOT: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/resources/dataset");

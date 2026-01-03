@@ -1,6 +1,6 @@
 //! the rolling stock length over buffers
 
-use common::length::{validate_length_range, Length};
+use common::length::{Length, validate_length_range};
 use common::measure_units::MeasureUnit;
 use rust_decimal::Decimal;
 use rust_decimal_macros::dec;
@@ -76,19 +76,19 @@ impl Validate for LengthOverBuffers {
     fn validate(&self) -> Result<(), ValidationErrors> {
         let mut errors = ValidationErrors::new();
 
-        if let Some(inches) = self.inches && let Err(error) = validate_length_range(&inches, Some(dec!(0.1)), Some(dec!(999.0))) {
+        if let Some(inches) = self.inches
+            && let Err(error) = validate_length_range(&inches, Some(dec!(0.1)), Some(dec!(999.0)))
+        {
             errors.add("inches", error);
         }
 
-        if let Some(millimeters) = self.millimeters && let Err(error) = validate_length_range(&millimeters, Some(dec!(0.1)), Some(dec!(9999.0))) {
+        if let Some(millimeters) = self.millimeters
+            && let Err(error) = validate_length_range(&millimeters, Some(dec!(0.1)), Some(dec!(9999.0)))
+        {
             errors.add("millimeters", error);
         }
 
-        if errors.is_empty() {
-            Ok(())
-        } else {
-            Err(errors)
-        }
+        if errors.is_empty() { Ok(()) } else { Err(errors) }
     }
 }
 

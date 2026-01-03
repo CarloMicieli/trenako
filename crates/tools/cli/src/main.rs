@@ -1,9 +1,9 @@
 use cli::cvs_files::read_catalog_items;
 use cli::cvs_files::write_catalog_items;
-use cli::dataset::import::import_catalog_items;
 use cli::dataset::Dataset;
+use cli::dataset::import::import_catalog_items;
 use cli::validator::validate_dataset;
-use cli::{cli_parser, Command};
+use cli::{Command, cli_parser};
 use serde_json::json;
 
 fn main() {
