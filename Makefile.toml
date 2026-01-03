@@ -131,7 +131,7 @@ args = ["run", "-it", "--rm",
     "-e", "POSTGRES_PASSWORD=mysecretpassword",
     "-e", "POSTGRES_DB=trenakodb",
     "-p", "5432:5432",
-    "postgres:16.1-alpine"
+    "postgres:18.1-alpine3.23"
 ]
 
 [tasks.docker-postgres-stop] 
