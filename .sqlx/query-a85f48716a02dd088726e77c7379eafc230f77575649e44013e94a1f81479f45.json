@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT\n                railway_id as \"railway_id: RailwayId\",\n                name,\n                abbreviation,\n                registered_company_name,\n                organization_entity_type as \"organization_entity_type?: OrganizationEntityType\",\n                description_de,\n                description_en,\n                description_fr,\n                description_it,\n                country,\n                operating_since,\n                operating_until,\n                status as \"status?: RailwayStatus\",\n                gauge_meters,\n                track_gauge as \"track_gauge?: TrackGauge\",\n                headquarters as \"headquarters!: Vec<String>\",\n                total_length_mi,\n                total_length_km,\n                contact_email,\n                contact_website_url,\n                contact_phone,\n                socials_facebook,\n                socials_instagram,\n                socials_linkedin,\n                socials_twitter,\n                socials_youtube\n            FROM railways WHERE name = $1",
+  "query": "SELECT\n            railway_id as \"railway_id: RailwayId\",\n            name,\n            abbreviation,\n            registered_company_name,\n            organization_entity_type as \"organization_entity_type?: OrganizationEntityType\",\n            description_de,\n            description_en,\n            description_fr,\n            description_it,\n            country,\n            operating_since,\n            operating_until,\n            status as \"status?: RailwayStatus\",\n            gauge_meters,\n            track_gauge as \"track_gauge?: TrackGauge\",\n            headquarters as \"headquarters!: Vec<String>\",\n            total_length_mi,\n            total_length_km,\n            contact_email,\n            contact_website_url,\n            contact_phone,\n            socials_facebook,\n            socials_instagram,\n            socials_linkedin,\n            socials_twitter,\n            socials_youtube\n        FROM railways WHERE name = $1",
   "describe": {
     "columns": [
       {
@@ -211,5 +211,5 @@
       true
     ]
   },
-  "hash": "e4d08266b2e30251fc5520818e286170e5bc1444e52a3715ee17c84abecf8a04"
+  "hash": "a85f48716a02dd088726e77c7379eafc230f77575649e44013e94a1f81479f45"
 }
