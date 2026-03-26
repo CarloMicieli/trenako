@@ -40,8 +40,8 @@ pub fn setup_hbs() -> &'static Handlebars<'static> {
             .register_template_string(
                 "catalog_items",
                 include_str!(concat!(
-                env!("CARGO_MANIFEST_DIR"),
-                "/tests/resources/catalog_items_request.json.hbs"
+                    env!("CARGO_MANIFEST_DIR"),
+                    "/tests/resources/catalog_items_request.json.hbs"
                 )),
             )
             .unwrap();

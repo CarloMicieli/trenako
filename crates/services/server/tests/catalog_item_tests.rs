@@ -1,4 +1,5 @@
 use crate::common::seeding::{seed_brands, seed_catalog_items, seed_railways, seed_scales};
+use crate::common::templates::{render, setup_hbs};
 use crate::common::{IMAGE_NAME, create_docker_test, spawn_app};
 use catalog::brands::brand_id::BrandId;
 use catalog::catalog_items::availability_status::AvailabilityStatus;
@@ -24,7 +25,6 @@ use rust_decimal_macros::dec;
 use serde_json::json;
 use sqlx::PgPool;
 use std::str::FromStr;
-use crate::common::templates::{render, setup_hbs};
 
 pub mod common;
 
