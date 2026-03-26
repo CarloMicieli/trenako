@@ -2,8 +2,8 @@ pub mod common;
 
 use crate::common::database::start_postgres;
 use crate::common::seeding::seed_brands;
-use crate::common::templates::{render, setup_hbs};
 use crate::common::spawn_app;
+use crate::common::templates::{render, setup_hbs};
 use ::common::contacts::{MailAddress, PhoneNumber};
 use ::common::organizations::OrganizationEntityType;
 use ::common::socials::Handler;
@@ -94,8 +94,14 @@ async fn it_should_create_new_brands() {
     assert_eq!(Some(String::from("description")), saved.description_fr);
     assert_eq!(Some(String::from("descrizione")), saved.description_it);
     assert_eq!(Some(String::from("UNKNOWN")), saved.group_name);
-    assert_eq!(Some(String::from("Registered Company Ltd")), saved.registered_company_name);
-    assert_eq!(Some(OrganizationEntityType::LimitedCompany), saved.organization_entity_type);
+    assert_eq!(
+        Some(String::from("Registered Company Ltd")),
+        saved.registered_company_name
+    );
+    assert_eq!(
+        Some(OrganizationEntityType::LimitedCompany),
+        saved.organization_entity_type
+    );
     assert_eq!(Some(BrandStatus::Active), saved.status);
     assert_eq!(Some(String::from("mail@mail.com")), saved.contact_email);
     assert_eq!(Some(String::from("+14152370800")), saved.contact_phone);

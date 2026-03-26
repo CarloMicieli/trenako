@@ -1,7 +1,7 @@
-use crate::common::seeding::{seed_brands, seed_catalog_items, seed_railways, seed_scales};
-use crate::common::templates::{render, setup_hbs};
 use crate::common::database::start_postgres;
+use crate::common::seeding::{seed_brands, seed_catalog_items, seed_railways, seed_scales};
 use crate::common::spawn_app;
+use crate::common::templates::{render, setup_hbs};
 use catalog::brands::brand_id::BrandId;
 use catalog::catalog_items::availability_status::AvailabilityStatus;
 use catalog::catalog_items::catalog_item::CatalogItem;
@@ -77,7 +77,12 @@ async fn it_should_find_catalog_items_by_id() {
     assert_eq!(body.scale.display, String::from("H0"));
     assert_eq!(body.power_method, PowerMethod::DC);
     assert_eq!(body.epoch, Epoch::V);
-    assert_eq!(body.description.italian(), Some(&String::from("Locomotiva elettrica E 402A 015 nella livrea di origine rosso/bianco versione di origine, pantografi 52 Sommerfeldt")));
+    assert_eq!(
+        body.description.italian(),
+        Some(&String::from(
+            "Locomotiva elettrica E 402A 015 nella livrea di origine rosso/bianco versione di origine, pantografi 52 Sommerfeldt"
+        ))
+    );
     assert_eq!(body.delivery_date, Some(DeliveryDate::by_year(2005)));
     assert_eq!(body.availability_status, Some(AvailabilityStatus::Available));
     assert_eq!(body.count, 1);
@@ -102,7 +107,8 @@ async fn it_should_find_catalog_items_by_id() {
             locomotive_type,
             dcc_interface,
             control,
-            is_dummy } => {
+            is_dummy,
+        } => {
             assert_eq!(railway.railway_id, RailwayId::new("FS"));
             assert_eq!(railway.display, String::from("FS"));
             assert_eq!(livery, Some(String::from("rosso/bianco")));

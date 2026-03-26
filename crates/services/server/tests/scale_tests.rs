@@ -2,8 +2,8 @@ pub mod common;
 
 use crate::common::database::start_postgres;
 use crate::common::seeding::seed_scales;
-use crate::common::templates::{render, setup_hbs};
 use crate::common::spawn_app;
+use crate::common::templates::{render, setup_hbs};
 use ::common::length::Length;
 use ::common::measure_units::MeasureUnit;
 use catalog::common::TrackGauge;
