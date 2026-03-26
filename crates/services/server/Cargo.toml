@@ -46,7 +46,7 @@ url                 = { workspace = true }
 validator           = { workspace = true }
 
 [dev-dependencies]
-dockertest          = { workspace = true }
+testcontainers      = { workspace = true }
 handlebars          = { workspace = true }
 isocountry          = { workspace = true }
 pretty_assertions   = { workspace = true }

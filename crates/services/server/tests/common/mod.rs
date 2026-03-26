@@ -1,12 +1,9 @@
 use crate::common::database::Database;
 use configuration::{LoggingFormat, LoggingLevel, LoggingSettings, ServerSettings, Settings};
-use dockertest::{DockerTest, Source};
 use server::app;
 use sqlx::PgPool;
 use std::future::IntoFuture;
 use tokio::net::TcpListener;
-
-pub const IMAGE_NAME: &str = "postgres";
 
 pub mod database;
 pub mod seeding;
@@ -32,8 +29,8 @@ impl ServiceUnderTest {
     }
 }
 
-pub async fn spawn_app(postgres_port: u32) -> ServiceUnderTest {
-    let database = Database::new(postgres_port as u16);
+pub async fn spawn_app(postgres_port: u16) -> ServiceUnderTest {
+    let database = Database::new(postgres_port);
     let database_settings = database.test_settings();
     let settings = Settings {
         server: ServerSettings {
@@ -59,10 +56,4 @@ pub async fn spawn_app(postgres_port: u32) -> ServiceUnderTest {
         base_endpoint_url: format!("http://127.0.0.1:{port}"),
         database,
     }
-}
-
-pub fn create_docker_test() -> DockerTest {
-    let mut test = DockerTest::new().with_default_source(Source::DockerHub);
-    test.provide_container(database::create_postgres_container());
-    test
 }
