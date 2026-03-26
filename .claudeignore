@@ -1,0 +1,32 @@
+# --- Build Artifacts ---
+# The target directory contains all compiled code and can be massive.
+target/
+
+# --- Dependency Locks ---
+# While important for builds, reading 10,000 lines of Cargo.lock 
+# usually wastes tokens unless you're debugging a specific version conflict.
+Cargo.lock
+
+# --- IDE & Editor Files ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Environment & Secrets ---
+.env
+.env.*
+!.env.example
+
+# --- Rust Specifics ---
+# If you use cargo-expand or similar tools
+*.rs.bk
+
+# --- Large Assets ---
+# Exclude heavy assets that aren't code-related
+assets/
+static/
+node_modules/
+
+# --- Seeding data ---
+dataset/
