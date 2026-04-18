@@ -14,9 +14,7 @@ pub fn read_catalog_items(file_path: &str) -> Result<Vec<CatalogItemRequest>, an
     let mut catalog_items: HashMap<CatalogItemId, CatalogItemRequest> = HashMap::new();
 
     let mut rdr = csv::ReaderBuilder::new().has_headers(true).from_reader(file);
-    let mut line = 2;
-
-    for result in rdr.deserialize() {
+    for (line, result) in (2..).zip(rdr.deserialize()) {
         let result: csv::Result<CsvRecord> = result;
         match result {
             Ok(record) => {
@@ -39,7 +37,6 @@ pub fn read_catalog_items(file_path: &str) -> Result<Vec<CatalogItemRequest>, an
                 eprintln!("(at line {}) {:?}", line, why);
             }
         }
-        line += 1;
     }
 
     let output: Vec<CatalogItemRequest> = catalog_items
