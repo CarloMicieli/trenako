@@ -30,7 +30,7 @@ pub async fn handle(
 impl ToProblemDetail for CatalogItemCreationError {
     fn to_problem_detail(self, request_id: Uuid, _path: Option<&str>) -> ProblemDetail {
         match self {
-            CatalogItemCreationError::BrandNotFound(_) => {
+            CatalogItemCreationError::ManufacturerNotFound(_) => {
                 ProblemDetail::unprocessable_entity(request_id, &self.to_string())
             }
             CatalogItemCreationError::CatalogItemAlreadyExists(_) => {
@@ -57,7 +57,7 @@ mod test {
         use super::*;
         use anyhow::anyhow;
         use axum::http::StatusCode;
-        use catalog::brands::brand_id::BrandId;
+        use catalog::manufacturers::manufacturer_id::ManufacturerId;
         use catalog::catalog_items::catalog_item_id::CatalogItemId;
         use catalog::catalog_items::item_number::ItemNumber;
         use catalog::railways::railway_id::RailwayId;
@@ -69,7 +69,7 @@ mod test {
 
         #[test]
         fn it_should_return_conflict_when_the_catalog_item_already_exists() {
-            let catalog_item_id = CatalogItemId::of(&BrandId::new("acme"), &ItemNumber::new("12345"));
+            let catalog_item_id = CatalogItemId::of(&ManufacturerId::new("acme"), &ItemNumber::new("12345"));
             let error = CatalogItemCreationError::CatalogItemAlreadyExists(catalog_item_id);
 
             let id = Uuid::new_v4();
@@ -85,15 +85,15 @@ mod test {
         }
 
         #[test]
-        fn it_should_return_unprocessable_entity_when_the_brand_was_not_found() {
-            let error = CatalogItemCreationError::BrandNotFound(BrandId::new("acme"));
+        fn it_should_return_unprocessable_entity_when_the_manufacturer_was_not_found() {
+            let error = CatalogItemCreationError::ManufacturerNotFound(ManufacturerId::new("acme"));
 
             let id = Uuid::new_v4();
             let problem_detail = error.to_problem_detail(id, None);
             assert_eq!(StatusCode::UNPROCESSABLE_ENTITY, problem_detail.status);
             assert_eq!("https://httpstatuses.com/422", problem_detail.problem_type.as_str());
             assert_eq!(
-                "Unable to create the catalog item due to brand not found (id: acme)",
+                "Unable to create the catalog item due to manufacturer not found (id: acme)",
                 problem_detail.detail
             );
             assert_eq!("Unprocessable entity", problem_detail.title);

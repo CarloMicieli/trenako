@@ -15,7 +15,7 @@ pub fn write_catalog_items(file_path: &str, items: Vec<CatalogItemRequest>) -> R
 
 fn csv_record_from_catalog_item(item: CatalogItemRequest) -> Vec<CsvRecord> {
     let main_record = CsvRecord {
-        brand: item.brand,
+        manufacturer: item.manufacturer,
         item_number: Some(item.item_number.clone()),
         scale: item.scale,
         power_method: Some(item.power_method),

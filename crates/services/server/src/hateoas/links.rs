@@ -134,10 +134,10 @@ mod test {
         #[test]
         fn it_should_create_self_links() {
             let builder = LinkBuilder::new("http://localhost:8000");
-            let link = builder.link_to("/brands").slash("my-id").expect("invalid self link");
+            let link = builder.link_to("/manufacturers").slash("my-id").expect("invalid self link");
 
             assert_eq!(LinkRelation::SelfLink, link.rel);
-            assert_eq!("http://localhost:8000/brands/my-id", link.href.to_string());
+            assert_eq!("http://localhost:8000/manufacturers/my-id", link.href.to_string());
         }
     }
 }

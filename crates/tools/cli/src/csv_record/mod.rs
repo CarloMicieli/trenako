@@ -25,7 +25,7 @@ use std::str::FromStr;
 
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
 pub struct CsvRecord {
-    pub brand: String,
+    pub manufacturer: String,
     pub item_number: Option<ItemNumber>,
     pub scale: String,
     pub power_method: Option<PowerMethod>,
@@ -63,7 +63,7 @@ impl TryInto<CatalogItemRequest> for CsvRecord {
 
     fn try_into(self) -> Result<CatalogItemRequest, Self::Error> {
         let catalog_item_request = CatalogItemRequest {
-            brand: self.brand,
+            manufacturer: self.manufacturer,
             item_number: self.item_number.expect("the item number is required"),
             scale: self.scale,
             category: category_item_category(self.category.expect("the category is required")),

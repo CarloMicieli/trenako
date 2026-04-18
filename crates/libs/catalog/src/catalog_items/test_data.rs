@@ -1,6 +1,6 @@
-use crate::brands::brand_id::BrandId;
+use crate::manufacturers::manufacturer_id::ManufacturerId;
 use crate::catalog_items::availability_status::AvailabilityStatus;
-use crate::catalog_items::catalog_item::{CatalogItem, CatalogItemBrand, CatalogItemScale};
+use crate::catalog_items::catalog_item::{CatalogItem, CatalogItemManufacturer, CatalogItemScale};
 use crate::catalog_items::catalog_item_id::CatalogItemId;
 use crate::catalog_items::category::{Category, LocomotiveType};
 use crate::catalog_items::control::{Control, DccInterface};
@@ -18,16 +18,16 @@ use common::length::Length;
 use common::metadata::Metadata;
 use rust_decimal_macros::dec;
 
-pub fn acme() -> CatalogItemBrand {
-    CatalogItemBrand::new(BrandId::new("acme"), "ACME")
+pub fn acme() -> CatalogItemManufacturer {
+    CatalogItemManufacturer::new(ManufacturerId::new("acme"), "ACME")
 }
 
-pub fn piko() -> CatalogItemBrand {
-    CatalogItemBrand::new(BrandId::new("piko"), "Piko")
+pub fn piko() -> CatalogItemManufacturer {
+    CatalogItemManufacturer::new(ManufacturerId::new("piko"), "Piko")
 }
 
-pub fn roco() -> CatalogItemBrand {
-    CatalogItemBrand::new(BrandId::new("roco"), "Roco")
+pub fn roco() -> CatalogItemManufacturer {
+    CatalogItemManufacturer::new(ManufacturerId::new("roco"), "Roco")
 }
 
 #[allow(non_snake_case)]
@@ -41,10 +41,10 @@ pub fn fs() -> RollingStockRailway {
 
 #[allow(non_snake_case)]
 pub fn ACME_60142() -> CatalogItem {
-    let brand = acme();
+    let manufacturer = acme();
     let item_number = ItemNumber::new("60142");
 
-    let id = CatalogItemId::new(brand.clone(), item_number.clone()); //TODO: fix me
+    let id = CatalogItemId::new(manufacturer.clone(), item_number.clone()); //TODO: fix me
 
     let rolling_stocks = vec![RollingStock::new_locomotive(
         RollingStockId::new(),
@@ -64,7 +64,7 @@ pub fn ACME_60142() -> CatalogItem {
 
     CatalogItem::new(
         id,
-        brand,
+        manufacturer,
         item_number,
         Category::Locomotives,
         H0(),
@@ -82,10 +82,10 @@ pub fn ACME_60142() -> CatalogItem {
 
 #[allow(non_snake_case)]
 pub fn Piko_52848() -> CatalogItem {
-    let brand = piko();
+    let manufacturer = piko();
     let item_number = ItemNumber::new("52848");
 
-    let id = CatalogItemId::new(brand.clone(), item_number.clone()); //TODO: fix me
+    let id = CatalogItemId::new(manufacturer.clone(), item_number.clone()); //TODO: fix me
 
     let rolling_stocks = vec![RollingStock::new_locomotive(
         RollingStockId::new(),
@@ -105,7 +105,7 @@ pub fn Piko_52848() -> CatalogItem {
 
     CatalogItem::new(
         id,
-        brand,
+        manufacturer,
         item_number,
         Category::Locomotives,
         H0(),

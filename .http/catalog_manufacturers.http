@@ -1,0 +1,56 @@
+###
+
+# Create a new model railway manufacturer
+POST http://{{host}}:{{port}}/api/manufacturers
+Content-Type: application/json
+
+{
+  "name" : "ACME",
+  "registered_company_name" : "Registered Company Ltd",
+  "organization_entity_type" : "LIMITED_COMPANY",
+  "group_name": "UNKNOWN",
+  "description" : {
+    "it" : "descrizione",
+    "en" : "description"
+  },
+  "address" : {
+    "street_address" : "Rue Morgue 22",
+    "extended_address" : null,
+    "postal_code" : "1H2 4BB",
+    "city" : "London",
+    "region" : null,
+    "country" : "GB"
+  },
+  "contact_info" : {
+    "email" : "mail@mail.com",
+    "phone" : "+14152370800",
+    "website_url" : "https://www.site.com"
+  },
+  "socials" : {
+    "facebook" : "facebook_handler",
+    "instagram" : "instagram_handler",
+    "linkedin" : "linkedin_handler",
+    "twitter" : "twitter_handler",
+    "youtube" : "youtube_handler"
+  },
+  "kind" : "INDUSTRIAL",
+  "status" : "ACTIVE"
+}
+
+###
+
+# Get all manufacturers
+// @no-log
+GET http://{{host}}:{{port}}/api/manufacturers
+
+###
+
+# Get all manufacturers (with pagination)
+// @no-log
+GET http://{{host}}:{{port}}/api/manufacturers?offset=0&limit=10
+
+###
+
+# Get a manufacturer by id
+// @no-log
+GET http://{{host}}:{{port}}/api/manufacturers/acme

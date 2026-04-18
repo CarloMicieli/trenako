@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT\n                c.catalog_item_id as \"catalog_item_id: CatalogItemId\",\n                c.item_number,\n                c.brand_id as \"brand_id: BrandId\",\n                b.name as brand_display,\n                c.scale_id as \"scale_id: ScaleId\",\n                s.name as scale_display,\n                c.category as \"category: Category\",\n                c.power_method as \"power_method: PowerMethod\",\n                c.epoch,\n                c.description_de,\n                c.description_en,\n                c.description_fr,\n                c.description_it,\n                c.details_de,\n                c.details_en,\n                c.details_fr,\n                c.details_it,\n                c.delivery_date,\n                c.availability_status as \"availability_status: AvailabilityStatus\",\n                c.count,\n                c.created_at,\n                c.last_modified_at,\n                c.version\n            FROM catalog_items AS c\n            JOIN brands AS b\n              ON c.brand_id = b.brand_id\n            JOIN scales AS s\n              ON s.scale_id = c.scale_id\n            WHERE c.catalog_item_id = $1 ",
+  "query": "SELECT\n                c.catalog_item_id as \"catalog_item_id: CatalogItemId\",\n                c.item_number,\n                c.manufacturer_id as \"manufacturer_id: ManufacturerId\",\n                b.name as manufacturer_display,\n                c.scale_id as \"scale_id: ScaleId\",\n                s.name as scale_display,\n                c.category as \"category: Category\",\n                c.power_method as \"power_method: PowerMethod\",\n                c.epoch,\n                c.description_de,\n                c.description_en,\n                c.description_fr,\n                c.description_it,\n                c.details_de,\n                c.details_en,\n                c.details_fr,\n                c.details_it,\n                c.delivery_date,\n                c.availability_status as \"availability_status: AvailabilityStatus\",\n                c.count,\n                c.created_at,\n                c.last_modified_at,\n                c.version\n            FROM catalog_items AS c\n            JOIN manufacturers AS b\n              ON c.manufacturer_id = b.manufacturer_id\n            JOIN scales AS s\n              ON s.scale_id = c.scale_id\n            WHERE c.catalog_item_id = $1 ",
   "describe": {
     "columns": [
       {
@@ -15,12 +15,12 @@
       },
       {
         "ordinal": 2,
-        "name": "brand_id: BrandId",
+        "name": "manufacturer_id: ManufacturerId",
         "type_info": "Varchar"
       },
       {
         "ordinal": 3,
-        "name": "brand_display",
+        "name": "manufacturer_display",
         "type_info": "Varchar"
       },
       {

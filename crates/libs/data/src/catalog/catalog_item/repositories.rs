@@ -2,7 +2,7 @@ use crate::catalog::catalog_item::catalog_item_row::CatalogItemRow;
 use crate::catalog::catalog_item::rolling_stock_row::RollingStockRow;
 use anyhow::Context;
 use async_trait::async_trait;
-use catalog::brands::brand_id::BrandId;
+use catalog::manufacturers::manufacturer_id::ManufacturerId;
 use catalog::catalog_items::availability_status::AvailabilityStatus;
 use catalog::catalog_items::catalog_item::CatalogItem;
 use catalog::catalog_items::catalog_item_id::CatalogItemId;
@@ -59,13 +59,13 @@ impl<'db> NewCatalogItemRepository<'db, PgUnitOfWork<'db>> for CatalogItemsRepos
         let request = &new_item.payload;
         let metadata = &new_item.metadata;
 
-        let brand_id = &request.brand_id;
+        let manufacturer_id = &request.manufacturer_id;
         let scale_id = &request.scale_id;
 
         sqlx::query!(
             r#"INSERT INTO catalog_items (
                 catalog_item_id,
-                brand_id,
+                manufacturer_id,
                 item_number,
                 scale_id,
                 category,
@@ -89,7 +89,7 @@ impl<'db> NewCatalogItemRepository<'db, PgUnitOfWork<'db>> for CatalogItemsRepos
                 $13, $14, $15, $16, $17, $18
             )"#,
             catalog_item_id as &CatalogItemId,
-            brand_id as &BrandId,
+            manufacturer_id as &ManufacturerId,
             request.item_number.value(),
             scale_id as &ScaleId,
             request.category as Category,
@@ -114,15 +114,15 @@ impl<'db> NewCatalogItemRepository<'db, PgUnitOfWork<'db>> for CatalogItemsRepos
         Ok(())
     }
 
-    async fn brand_exists(
+    async fn manufacturer_exists(
         &self,
-        brand_id: &BrandId,
+        manufacturer_id: &ManufacturerId,
         unit_of_work: &mut PgUnitOfWork<'db>,
     ) -> Result<bool, anyhow::Error> {
-        let result = sqlx::query!("SELECT brand_id FROM brands WHERE brand_id = $1 LIMIT 1", brand_id)
+        let result = sqlx::query!("SELECT manufacturer_id FROM manufacturers WHERE manufacturer_id = $1 LIMIT 1", manufacturer_id)
             .fetch_optional(&mut *unit_of_work.transaction)
             .await
-            .context("A database failure was encountered while trying to check for brand existence.")?;
+            .context("A database failure was encountered while trying to check for manufacturer existence.")?;
 
         Ok(result.is_some())
     }
@@ -260,8 +260,8 @@ impl<'db> FindCatalogItemByIdRepository<'db, PgUnitOfWork<'db>> for CatalogItems
             r#"SELECT
                 c.catalog_item_id as "catalog_item_id: CatalogItemId",
                 c.item_number,
-                c.brand_id as "brand_id: BrandId",
-                b.name as brand_display,
+                c.manufacturer_id as "manufacturer_id: ManufacturerId",
+                b.name as manufacturer_display,
                 c.scale_id as "scale_id: ScaleId",
                 s.name as scale_display,
                 c.category as "category: Category",
@@ -282,8 +282,8 @@ impl<'db> FindCatalogItemByIdRepository<'db, PgUnitOfWork<'db>> for CatalogItems
                 c.last_modified_at,
                 c.version
             FROM catalog_items AS c
-            JOIN brands AS b
-              ON c.brand_id = b.brand_id
+            JOIN manufacturers AS b
+              ON c.manufacturer_id = b.manufacturer_id
             JOIN scales AS s
               ON s.scale_id = c.scale_id
             WHERE c.catalog_item_id = $1 "#,

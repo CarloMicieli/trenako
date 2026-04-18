@@ -1,11 +1,11 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT\n                    brand_id as \"brand_id!: BrandId\", \n                    name, \n                    registered_company_name, \n                    organization_entity_type as \"organization_entity_type: OrganizationEntityType\", \n                    group_name,\n                    description_de, \n                    description_en,\n                    description_fr, \n                    description_it,\n                    kind as \"kind: BrandKind\", \n                    status as \"status?: BrandStatus\",\n                    contact_email as \"contact_email?: MailAddress\", \n                    contact_website_url as \"contact_website_url?: WebsiteUrl\", \n                    contact_phone as \"contact_phone?: PhoneNumber\",\n                    address_street_address, address_extended_address, address_city, address_region, address_postal_code, address_country,\n                    socials_facebook as \"socials_facebook?: Handler\", \n                    socials_instagram as \"socials_instagram?: Handler\",     \n                    socials_linkedin as \"socials_linkedin?: Handler\",    \n                    socials_twitter as \"socials_twitter?: Handler\",    \n                    socials_youtube as \"socials_youtube?: Handler\",\n                    created_at,\n                    last_modified_at,\n                    version\n                FROM brands\n                ORDER BY name",
+  "query": "SELECT\n                    manufacturer_id as \"manufacturer_id!: ManufacturerId\", \n                    name, \n                    registered_company_name, \n                    organization_entity_type as \"organization_entity_type: OrganizationEntityType\", \n                    group_name,\n                    description_de, \n                    description_en,\n                    description_fr, \n                    description_it,\n                    kind as \"kind: ManufacturerKind\", \n                    status as \"status?: ManufacturerStatus\",\n                    contact_email as \"contact_email?: MailAddress\", \n                    contact_website_url as \"contact_website_url?: WebsiteUrl\", \n                    contact_phone as \"contact_phone?: PhoneNumber\",\n                    address_street_address, address_extended_address, address_city, address_region, address_postal_code, address_country,\n                    socials_facebook as \"socials_facebook?: Handler\", \n                    socials_instagram as \"socials_instagram?: Handler\",     \n                    socials_linkedin as \"socials_linkedin?: Handler\",    \n                    socials_twitter as \"socials_twitter?: Handler\",    \n                    socials_youtube as \"socials_youtube?: Handler\",\n                    created_at,\n                    last_modified_at,\n                    version\n                FROM manufacturers\n                ORDER BY name",
   "describe": {
     "columns": [
       {
         "ordinal": 0,
-        "name": "brand_id!: BrandId",
+        "name": "manufacturer_id!: ManufacturerId",
         "type_info": "Varchar"
       },
       {
@@ -70,10 +70,10 @@
       },
       {
         "ordinal": 9,
-        "name": "kind: BrandKind",
+        "name": "kind: ManufacturerKind",
         "type_info": {
           "Custom": {
-            "name": "brand_kind",
+            "name": "manufacturer_kind",
             "kind": {
               "Enum": [
                 "BRASS_MODELS",
@@ -85,10 +85,10 @@
       },
       {
         "ordinal": 10,
-        "name": "status?: BrandStatus",
+        "name": "status?: ManufacturerStatus",
         "type_info": {
           "Custom": {
-            "name": "brand_status",
+            "name": "manufacturer_status",
             "kind": {
               "Enum": [
                 "ACTIVE",

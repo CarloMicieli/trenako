@@ -1,11 +1,11 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT\n                    brand_id, name, registered_company_name, \n                    organization_entity_type as \"organization_entity_type: OrganizationEntityType\", group_name, \n                    description_de, description_en, description_fr, description_it, kind as \"kind: BrandKind\", status as \"status: BrandStatus\",\n                    contact_email, contact_website_url, contact_phone,\n                    address_street_address, address_extended_address, address_city, address_region, address_postal_code, address_country,\n                    socials_facebook, socials_instagram, socials_linkedin, socials_twitter, socials_youtube\n                FROM brands WHERE name = $1",
+  "query": "SELECT\n                    manufacturer_id, name, registered_company_name, \n                    organization_entity_type as \"organization_entity_type: OrganizationEntityType\", group_name, \n                    description_de, description_en, description_fr, description_it, kind as \"kind: ManufacturerKind\", status as \"status: ManufacturerStatus\",\n                    contact_email, contact_website_url, contact_phone,\n                    address_street_address, address_extended_address, address_city, address_region, address_postal_code, address_country,\n                    socials_facebook, socials_instagram, socials_linkedin, socials_twitter, socials_youtube\n                FROM manufacturers WHERE name = $1",
   "describe": {
     "columns": [
       {
         "ordinal": 0,
-        "name": "brand_id",
+        "name": "manufacturer_id",
         "type_info": "Varchar"
       },
       {
@@ -70,10 +70,10 @@
       },
       {
         "ordinal": 9,
-        "name": "kind: BrandKind",
+        "name": "kind: ManufacturerKind",
         "type_info": {
           "Custom": {
-            "name": "brand_kind",
+            "name": "manufacturer_kind",
             "kind": {
               "Enum": [
                 "BRASS_MODELS",
@@ -85,10 +85,10 @@
       },
       {
         "ordinal": 10,
-        "name": "status: BrandStatus",
+        "name": "status: ManufacturerStatus",
         "type_info": {
           "Custom": {
-            "name": "brand_status",
+            "name": "manufacturer_status",
             "kind": {
               "Enum": [
                 "ACTIVE",

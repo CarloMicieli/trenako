@@ -1,7 +1,7 @@
 {
   "items": [
     {
-      "brand" : "ACME",
+      "manufacturer" : "ACME",
       "item_number" : "60011",
       "category" : "LOCOMOTIVES",
       "scale" : "H0",

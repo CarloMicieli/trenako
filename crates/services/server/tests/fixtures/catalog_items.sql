@@ -1,5 +1,5 @@
 INSERT INTO catalog_items (
-    catalog_item_id, brand_id, item_number, scale_id, category,
+    catalog_item_id, manufacturer_id, item_number, scale_id, category,
     description_de, description_en, description_fr, description_it,
     details_de, details_en, details_fr, details_it,
     power_method, epoch, delivery_date, availability_status, count,

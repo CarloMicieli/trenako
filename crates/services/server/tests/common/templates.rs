@@ -11,10 +11,10 @@ pub fn setup_hbs() -> &'static Handlebars<'static> {
         // You can pre-register your templates here
         registry
             .register_template_string(
-                "brands",
+                "manufacturers",
                 include_str!(concat!(
                     env!("CARGO_MANIFEST_DIR"),
-                    "/tests/resources/brands_request.json.hbs"
+                    "/tests/resources/manufacturers_request.json.hbs"
                 )),
             )
             .unwrap();

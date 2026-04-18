@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT\n            item_number,\n            brand_id as \"brand_id: BrandId\",\n            scale_id as \"scale_id: ScaleId\",\n            category as \"category: Category\",\n            power_method as \"power_method: PowerMethod\",\n            epoch,\n            description_en,\n            description_it,\n            details_en,\n            details_it,\n            delivery_date,\n            availability_status as \"availability_status: AvailabilityStatus\",\n            count\n        FROM catalog_items WHERE catalog_item_id = $1",
+  "query": "SELECT\n            item_number,\n            manufacturer_id as \"manufacturer_id: ManufacturerId\",\n            scale_id as \"scale_id: ScaleId\",\n            category as \"category: Category\",\n            power_method as \"power_method: PowerMethod\",\n            epoch,\n            description_en,\n            description_it,\n            details_en,\n            details_it,\n            delivery_date,\n            availability_status as \"availability_status: AvailabilityStatus\",\n            count\n        FROM catalog_items WHERE catalog_item_id = $1",
   "describe": {
     "columns": [
       {
@@ -10,7 +10,7 @@
       },
       {
         "ordinal": 1,
-        "name": "brand_id: BrandId",
+        "name": "manufacturer_id: ManufacturerId",
         "type_info": "Varchar"
       },
       {

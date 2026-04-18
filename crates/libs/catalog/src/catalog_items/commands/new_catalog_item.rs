@@ -1,4 +1,4 @@
-use crate::brands::brand_id::BrandId;
+use crate::manufacturers::manufacturer_id::ManufacturerId;
 use crate::catalog_items::availability_status::AvailabilityStatus;
 use crate::catalog_items::catalog_item_id::CatalogItemId;
 use crate::catalog_items::catalog_item_request::CatalogItemRequest;
@@ -45,9 +45,9 @@ where
     RR: NewRollingStockRepository<'db, U>,
     DB: Database<'db, U>,
 {
-    let brand_id = BrandId::new(&request.brand);
+    let manufacturer_id = ManufacturerId::new(&request.manufacturer);
     let scale_id = ScaleId::new(&request.scale);
-    let catalog_item_id = CatalogItemId::of(&brand_id, &request.item_number);
+    let catalog_item_id = CatalogItemId::of(&manufacturer_id, &request.item_number);
 
     let mut unit_of_work = db.begin().await?;
 
@@ -55,8 +55,8 @@ where
         return Err(CatalogItemCreationError::CatalogItemAlreadyExists(catalog_item_id));
     }
 
-    if !repo.brand_exists(&brand_id, &mut unit_of_work).await? {
-        return Err(CatalogItemCreationError::BrandNotFound(brand_id));
+    if !repo.manufacturer_exists(&manufacturer_id, &mut unit_of_work).await? {
+        return Err(CatalogItemCreationError::ManufacturerNotFound(manufacturer_id));
     }
 
     if !repo.scale_exists(&scale_id, &mut unit_of_work).await? {
@@ -96,8 +96,8 @@ pub enum CatalogItemCreationError {
     #[error("The catalog item already exists (id: {0})")]
     CatalogItemAlreadyExists(CatalogItemId),
 
-    #[error("Unable to create the catalog item due to brand not found (id: {0})")]
-    BrandNotFound(BrandId),
+    #[error("Unable to create the catalog item due to manufacturer not found (id: {0})")]
+    ManufacturerNotFound(ManufacturerId),
 
     #[error("Unable to create the catalog item due to railway not found (id: {0})")]
     RailwayNotFound(RailwayId),
@@ -119,8 +119,8 @@ impl TryFrom<CatalogItemRequest> for NewCatalogItemCommand {
 
     fn try_from(value: CatalogItemRequest) -> result::Result<Self, Self::Error> {
         validate_request(&value)?;
-        let brand_id = BrandId::new(&value.brand);
-        let catalog_item_id = CatalogItemId::of(&brand_id, &value.item_number);
+        let manufacturer_id = ManufacturerId::new(&value.manufacturer);
+        let catalog_item_id = CatalogItemId::of(&manufacturer_id, &value.item_number);
 
         let rolling_stocks: Vec<NewRollingStockCommand> = value
             .rolling_stocks
@@ -146,7 +146,7 @@ fn validate_request(request: &CatalogItemRequest) -> result::Result<(), CatalogI
 
 #[derive(Debug, Clone)]
 pub struct CatalogItemCommandPayload {
-    pub brand_id: BrandId,
+    pub manufacturer_id: ManufacturerId,
     pub item_number: ItemNumber,
     pub scale_id: ScaleId,
     pub category: Category,
@@ -163,11 +163,11 @@ impl TryFrom<CatalogItemRequest> for CatalogItemCommandPayload {
     type Error = CatalogItemCreationError;
 
     fn try_from(request: CatalogItemRequest) -> result::Result<Self, Self::Error> {
-        let brand_id = BrandId::new(&request.brand);
+        let manufacturer_id = ManufacturerId::new(&request.manufacturer);
         let scale_id = ScaleId::new(&request.scale);
 
         let payload = CatalogItemCommandPayload {
-            brand_id,
+            manufacturer_id,
             item_number: request.item_number,
             scale_id,
             category: request.category,
@@ -451,7 +451,7 @@ mod test {
     use common::localized_text::LocalizedText;
 
     mod new_catalog_item_command {
-        use crate::brands::brand_id::BrandId;
+        use crate::manufacturers::manufacturer_id::ManufacturerId;
         use crate::catalog_items::catalog_item_id::CatalogItemId;
         use crate::catalog_items::commands::new_catalog_item::test::{catalog_item, new_catalog_item};
         use crate::catalog_items::commands::new_catalog_item::{CatalogItemCreationError, create_new_catalog_item};
@@ -464,7 +464,7 @@ mod test {
         use common::unit_of_work::noop::NoOpDatabase;
 
         #[tokio::test]
-        async fn it_should_return_an_error_when_the_brand_is_not_found() {
+        async fn it_should_return_an_error_when_the_manufacturer_is_not_found() {
             let repo = InMemoryCatalogItemRepository::empty();
             let rr_repo = InMemoryRollingStockRepository::empty();
             let db = NoOpDatabase;
@@ -475,14 +475,14 @@ mod test {
             assert!(result.is_err());
 
             match result {
-                Err(CatalogItemCreationError::BrandNotFound(brand)) => assert_eq!(BrandId::new("ACME"), brand),
-                _ => panic!("CatalogItemCreationError::BrandNotFound is expected (found: {result:?})"),
+                Err(CatalogItemCreationError::ManufacturerNotFound(manufacturer)) => assert_eq!(ManufacturerId::new("ACME"), manufacturer),
+                _ => panic!("CatalogItemCreationError::ManufacturerNotFound is expected (found: {result:?})"),
             }
         }
 
         #[tokio::test]
         async fn it_should_return_an_error_when_the_scale_is_not_found() {
-            let repo = InMemoryCatalogItemRepository::empty().with_brand(BrandId::new("ACME"));
+            let repo = InMemoryCatalogItemRepository::empty().with_manufacturer(ManufacturerId::new("ACME"));
             let rr_repo = InMemoryRollingStockRepository::empty();
             let db = NoOpDatabase;
 
@@ -500,7 +500,7 @@ mod test {
         #[tokio::test]
         async fn it_should_return_an_error_when_the_catalog_item_already_exists() {
             let repo =
-                InMemoryCatalogItemRepository::with(catalog_item(BrandId::new("ACME"), ItemNumber::new("123456")));
+                InMemoryCatalogItemRepository::with(catalog_item(ManufacturerId::new("ACME"), ItemNumber::new("123456")));
             let rr_repo = InMemoryRollingStockRepository::empty();
             let db = NoOpDatabase;
 
@@ -520,7 +520,7 @@ mod test {
         #[tokio::test]
         async fn it_should_return_an_error_when_the_railway_is_not_found() {
             let repo = InMemoryCatalogItemRepository::empty()
-                .with_brand(BrandId::new("ACME"))
+                .with_manufacturer(ManufacturerId::new("ACME"))
                 .with_scale(ScaleId::new("H0"));
             let rr_repo = InMemoryRollingStockRepository::empty();
             let db = NoOpDatabase;
@@ -540,7 +540,7 @@ mod test {
         #[tokio::test]
         async fn it_should_create_a_new_catalog_item() {
             let repo = InMemoryCatalogItemRepository::empty()
-                .with_brand(BrandId::new("ACME"))
+                .with_manufacturer(ManufacturerId::new("ACME"))
                 .with_scale(ScaleId::new("H0"));
             let rr_repo = InMemoryRollingStockRepository::empty().with_railway(RailwayId::new("FS"));
             let db = NoOpDatabase;
@@ -550,7 +550,7 @@ mod test {
 
             assert!(result.is_ok());
             assert_eq!(
-                CatalogItemId::of(&BrandId::new("ACME"), &ItemNumber::new("123456")),
+                CatalogItemId::of(&ManufacturerId::new("ACME"), &ItemNumber::new("123456")),
                 result.unwrap().catalog_item_id
             );
         }
@@ -558,7 +558,7 @@ mod test {
 
     fn new_catalog_item() -> CatalogItemRequest {
         CatalogItemRequest {
-            brand: "ACME".to_string(),
+            manufacturer: "ACME".to_string(),
             item_number: ItemNumber::new("123456"),
             scale: "H0".to_string(),
             category: Category::Locomotives,
@@ -590,11 +590,11 @@ mod test {
         }
     }
 
-    fn catalog_item(brand_id: BrandId, item_number: ItemNumber) -> NewCatalogItemCommand {
+    fn catalog_item(manufacturer_id: ManufacturerId, item_number: ItemNumber) -> NewCatalogItemCommand {
         NewCatalogItemCommand {
-            catalog_item_id: CatalogItemId::of(&brand_id, &item_number),
+            catalog_item_id: CatalogItemId::of(&manufacturer_id, &item_number),
             payload: CatalogItemCommandPayload {
-                brand_id,
+                manufacturer_id,
                 item_number,
                 scale_id: ScaleId::new("H0"),
                 category: Category::Locomotives,

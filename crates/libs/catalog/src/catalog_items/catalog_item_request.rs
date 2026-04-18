@@ -13,9 +13,9 @@ use validator::Validate;
 /// A request to create/update catalog items
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize, Validate)]
 pub struct CatalogItemRequest {
-    /// the brand
+    /// the manufacturer
     #[validate(length(min = 3, max = 50))]
-    pub brand: String,
+    pub manufacturer: String,
     /// the item number
     #[validate(custom(function = "crate::catalog_items::item_number::validate_item_number"))]
     pub item_number: ItemNumber,
@@ -68,9 +68,9 @@ mod test {
         #[case(random_str(1))]
         #[case(random_str(2))]
         #[case(random_str(51))]
-        fn it_should_validate_the_brand_name(#[case] input: String) {
+        fn it_should_validate_the_manufacturer_name(#[case] input: String) {
             let request = CatalogItemRequest {
-                brand: input.clone(),
+                manufacturer: input.clone(),
                 ..catalog_item_request()
             };
 
@@ -78,12 +78,12 @@ mod test {
             let err = result.unwrap_err();
             let errors = err.field_errors();
             assert_eq!(1, errors.len());
-            assert!(errors.contains_key("brand"));
-            assert_eq!(errors["brand"].len(), 1);
-            assert_eq!(errors["brand"][0].code, "length");
-            assert_eq!(errors["brand"][0].params["value"], input);
-            assert_eq!(errors["brand"][0].params["min"], 3);
-            assert_eq!(errors["brand"][0].params["max"], 50);
+            assert!(errors.contains_key("manufacturer"));
+            assert_eq!(errors["manufacturer"].len(), 1);
+            assert_eq!(errors["manufacturer"][0].code, "length");
+            assert_eq!(errors["manufacturer"][0].params["value"], input);
+            assert_eq!(errors["manufacturer"][0].params["min"], 3);
+            assert_eq!(errors["manufacturer"][0].params["max"], 50);
         }
 
         #[test]
@@ -205,7 +205,7 @@ mod test {
 
         fn catalog_item_request() -> CatalogItemRequest {
             CatalogItemRequest {
-                brand: "ACME".to_string(),
+                manufacturer: "ACME".to_string(),
                 item_number: ItemNumber::new("123456"),
                 scale: "H0".to_string(),
                 category: Category::TrainSets,
