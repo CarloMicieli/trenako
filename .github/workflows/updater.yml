@@ -1,0 +1,50 @@
+name: Weekly Dependency Update
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # 00:00 every Sunday
+  workflow_dispatch:
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: 📂 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🦀 Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: 🛠️ Install cargo-edit
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-edit
+
+      - name: 🚀 Upgrade Cargo.toml
+        # --pinned ensures we respect version pins if you have any
+        run: cargo upgrade --pinned 
+
+      - name: 🔒 Update Cargo.lock
+        run: cargo update
+
+      - name: ✅ Run Tests
+        # Crucial for Axum servers to ensure new versions don't break your routes/middleware
+        run: cargo test
+
+      - name: 📬 Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore(deps): weekly crate updates'
+          title: 'chore(deps): weekly crate updates'
+          body: |
+            Automated weekly dependency updates for the Trenako server.
+            
+            This PR updates `Cargo.toml` and `Cargo.lock`. 
+            Tests were executed in CI prior to PR creation.
+          branch: automated-rust-update
+          delete-branch: true
