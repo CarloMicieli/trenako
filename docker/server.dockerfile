@@ -5,13 +5,36 @@ ARG APP_NAME=trenako-server
 ARG RUNTIME_IMAGE_SHA256=45287d89d96414e57c7705aa30cb8f9836ef30ae8897440dd8f06c4cff801eec
 
 ################################################################################
+# Create a stage for preparing the cargo-chef binary.
+FROM rust:${RUST_VERSION}-slim-bookworm@sha256:${RUST_IMAGE_SHA256} AS chef
+WORKDIR /app
+RUN cargo install --locked cargo-chef --version 0.1.73
+
+################################################################################
+# Create a stage for generating a recipe with dependencies only.
+FROM chef AS planner
+COPY Cargo.toml .
+COPY Cargo.lock .
+COPY .sqlx/ ./.sqlx
+COPY crates/ ./crates/
+RUN cargo chef prepare --recipe-path recipe.json
+
+################################################################################
 # Create a stage for building the application.
-FROM rust:${RUST_VERSION}-slim-bookworm@sha256:${RUST_IMAGE_SHA256} AS build
+FROM chef AS build
 ARG TARGETPLATFORM
 ARG APP_NAME
 WORKDIR /app
 
 ENV SQLX_OFFLINE=true
+
+COPY --from=planner /app/recipe.json ./recipe.json
+
+# Build dependencies using only recipe files and cache mounts.
+RUN --mount=type=cache,target=/app/target/,id=rust-chef-${APP_NAME}-${TARGETPLATFORM} \
+    --mount=type=cache,target=/usr/local/cargo/git/db \
+    --mount=type=cache,target=/usr/local/cargo/registry/ \
+    cargo chef cook --locked --release --recipe-path recipe.json --target-dir ./target
 
 COPY Cargo.toml .
 COPY Cargo.lock .
@@ -19,18 +42,8 @@ COPY .sqlx/ ./.sqlx
 COPY crates/ ./crates/
 COPY config/ ./config/
 
-# Build the application.
-# Leverage a cache mount to /usr/local/cargo/registry/
-# for downloaded dependencies, a cache mount to /usr/local/cargo/git/db
-# for git repository dependencies, and a cache mount to /app/target/ for
-# compiled dependencies which will speed up subsequent builds.
-# Leverage a bind mount to the src directory to avoid having to copy the
-# source code into the container. Once built, copy the executable to an
-# output directory before the cache mounted /app/target is unmounted.
-RUN --mount=type=bind,source=crates,target=crates \
-    --mount=type=bind,source=Cargo.toml,target=Cargo.toml \
-    --mount=type=bind,source=Cargo.lock,target=Cargo.lock \
-    --mount=type=cache,target=/app/target/,id=rust-cache-${APP_NAME}-${TARGETPLATFORM} \
+# Build the application with source code changes.
+RUN --mount=type=cache,target=/app/target/,id=rust-cache-${APP_NAME}-${TARGETPLATFORM} \
     --mount=type=cache,target=/usr/local/cargo/git/db \
     --mount=type=cache,target=/usr/local/cargo/registry/ \
     <<EOF
@@ -55,9 +68,13 @@ LABEL maintainer="Carlo Micieli <mail@trenako.com>"
 LABEL description="The trenako web server"
 
 ARG APP=/usr/src/app
+ARG APP_USER=appuser
+ENV TZ=Etc/UTC \
+    APP=${APP} \
+    APP_USER=${APP_USER}
 
 RUN apt-get update \
-    && apt-get install -y ca-certificates tzdata curl \
+    && apt-get install -y --no-install-recommends ca-certificates tzdata curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Create a non-privileged user that the app will run under.
@@ -70,18 +87,15 @@ RUN adduser \
     --shell "/sbin/nologin" \
     --no-create-home \
     --uid "${UID}" \
-    appuser
+    "${APP_USER}"
 
-RUN mkdir -p ${APP}/config
-RUN chown -R $APP_USER:$APP_USER ${APP}
+RUN mkdir -p "${APP}/config" \
+    && chown -R "${APP_USER}:${APP_USER}" "${APP}"
 
-USER appuser
+USER ${APP_USER}
 
 HEALTHCHECK --interval=5m --timeout=3s \
   CMD curl -f http://localhost/health-check || exit 1
-
-ENV TZ=Etc/UTC \
-    APP_USER=appuser
 
 # Copy the executable from the "build" stage.
 COPY --from=build /bin/server /bin/
