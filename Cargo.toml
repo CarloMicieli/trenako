@@ -17,7 +17,7 @@ homepage        = "https://github.com/CarloMicieli/trenako"
 license         = "Apache-2.0"
 readme          = "README.md"
 repository      = "https://github.com/CarloMicieli/trenako"
-rust-version    = "1.92"
+rust-version    = "1.95"
 version         = "0.1.0"
 
 [workspace.dependencies]
