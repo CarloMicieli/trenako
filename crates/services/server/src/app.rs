@@ -31,7 +31,7 @@ pub fn build_app(settings: &Settings) -> Router {
         .get_or_init(|| {
             PrometheusBuilder::new()
                 .install_recorder()
-                .expect("failed to install prometheus recorder")
+                .expect("failed to install Prometheus recorder; a global recorder may already be installed")
         })
         .clone();
     let management_router = Router::new().route("/health-check", get(health_check::handler)).route(
