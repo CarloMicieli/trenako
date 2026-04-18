@@ -1,0 +1,191 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT\n                c.catalog_item_id as \"catalog_item_id: CatalogItemId\",\n                c.item_number,\n                c.manufacturer_id as \"manufacturer_id: ManufacturerId\",\n                b.name as manufacturer_display,\n                c.scale_id as \"scale_id: ScaleId\",\n                s.name as scale_display,\n                c.category as \"category: Category\",\n                c.power_method as \"power_method: PowerMethod\",\n                c.epoch,\n                c.description_de,\n                c.description_en,\n                c.description_fr,\n                c.description_it,\n                c.details_de,\n                c.details_en,\n                c.details_fr,\n                c.details_it,\n                c.delivery_date,\n                c.availability_status as \"availability_status: AvailabilityStatus\",\n                c.count,\n                c.created_at,\n                c.last_modified_at,\n                c.version\n            FROM catalog_items AS c\n            JOIN manufacturers AS b\n              ON c.manufacturer_id = b.manufacturer_id\n            JOIN scales AS s\n              ON s.scale_id = c.scale_id\n            WHERE c.catalog_item_id = $1 ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "catalog_item_id: CatalogItemId",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "item_number",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "manufacturer_id: ManufacturerId",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "manufacturer_display",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "scale_id: ScaleId",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "scale_display",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 6,
+        "name": "category: Category",
+        "type_info": {
+          "Custom": {
+            "name": "catalog_item_category",
+            "kind": {
+              "Enum": [
+                "LOCOMOTIVES",
+                "TRAIN_SETS",
+                "STARTER_SETS",
+                "FREIGHT_CARS",
+                "PASSENGER_CARS",
+                "ELECTRIC_MULTIPLE_UNITS",
+                "RAILCARS"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 7,
+        "name": "power_method: PowerMethod",
+        "type_info": {
+          "Custom": {
+            "name": "power_method",
+            "kind": {
+              "Enum": [
+                "AC",
+                "DC",
+                "TRIX_EXPRESS"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 8,
+        "name": "epoch",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 9,
+        "name": "description_de",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 10,
+        "name": "description_en",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 11,
+        "name": "description_fr",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 12,
+        "name": "description_it",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 13,
+        "name": "details_de",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 14,
+        "name": "details_en",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 15,
+        "name": "details_fr",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 16,
+        "name": "details_it",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 17,
+        "name": "delivery_date",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 18,
+        "name": "availability_status: AvailabilityStatus",
+        "type_info": {
+          "Custom": {
+            "name": "availability_status",
+            "kind": {
+              "Enum": [
+                "ANNOUNCED",
+                "AVAILABLE",
+                "DISCONTINUED"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 19,
+        "name": "count",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 20,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 21,
+        "name": "last_modified_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 22,
+        "name": "version",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      true,
+      false
+    ]
+  },
+  "hash": "b61dfab320130387a1535e4eb0d4a541d78d06cd1898ffb51e357225665c1cfc"
+}

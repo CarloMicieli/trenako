@@ -3,14 +3,14 @@
 //!
 //! The list of supported types includes:
 //!
-//! - brands
+//! - manufacturers
 //! - catalog items and rolling stocks
 //! - railway companies
 //! - modeling scales
 
-pub mod brands;
 pub mod catalog_items;
 pub mod common;
+pub mod manufacturers;
 pub mod railways;
 pub mod scales;
 

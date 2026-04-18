@@ -5,7 +5,7 @@ POST http://{{host}}:{{port}}/api/catalog-items
 Content-Type: application/json
 
 {
-  "brand" : "ACME",
+  "manufacturer" : "ACME",
   "item_number" : "60011",
   "category" : "LOCOMOTIVES",
   "scale" : "H0",

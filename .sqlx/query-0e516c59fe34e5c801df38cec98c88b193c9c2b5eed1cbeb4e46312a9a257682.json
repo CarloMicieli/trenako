@@ -1,0 +1,68 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO catalog_items (\n                catalog_item_id,\n                manufacturer_id,\n                item_number,\n                scale_id,\n                category,\n                description_de,\n                description_en,\n                description_fr,\n                description_it,\n                details_en,\n                details_it,\n                power_method,\n                epoch,\n                delivery_date,\n                availability_status,\n                count,\n                created_at,\n                version\n            )\n            VALUES (\n                $1, $2, $3, $4, $5, $6,\n                $7, $8, $9, $10, $11, $12, \n                $13, $14, $15, $16, $17, $18\n            )",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        {
+          "Custom": {
+            "name": "catalog_item_category",
+            "kind": {
+              "Enum": [
+                "LOCOMOTIVES",
+                "TRAIN_SETS",
+                "STARTER_SETS",
+                "FREIGHT_CARS",
+                "PASSENGER_CARS",
+                "ELECTRIC_MULTIPLE_UNITS",
+                "RAILCARS"
+              ]
+            }
+          }
+        },
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        {
+          "Custom": {
+            "name": "power_method",
+            "kind": {
+              "Enum": [
+                "AC",
+                "DC",
+                "TRIX_EXPRESS"
+              ]
+            }
+          }
+        },
+        "Varchar",
+        "Varchar",
+        {
+          "Custom": {
+            "name": "availability_status",
+            "kind": {
+              "Enum": [
+                "ANNOUNCED",
+                "AVAILABLE",
+                "DISCONTINUED"
+              ]
+            }
+          }
+        },
+        "Int4",
+        "Timestamptz",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "0e516c59fe34e5c801df38cec98c88b193c9c2b5eed1cbeb4e46312a9a257682"
+}

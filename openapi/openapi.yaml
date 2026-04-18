@@ -17,8 +17,8 @@ servers:
     description: local
 
 tags:
-  - description: modelling railway brands
-    name: brands
+  - description: modelling railway manufacturers
+    name: manufacturers
   - description: model railway catalog items
     name: catalog-items
   - description: the model railway collections
@@ -35,22 +35,22 @@ tags:
     name: wishlists
 
 paths:
-  /api/brands:
+  /api/manufacturers:
     get:
-      summary: returns the model railway brands list
+      summary: returns the model railway manufacturers list
       tags:
-        - brands
-      operationId: get-brands
+        - manufacturers
+      operationId: get-manufacturers
       parameters:
         - $ref: '#/components/parameters/Offset'
         - $ref: '#/components/parameters/Limit'
       responses:
         "200":
-          description: a brands list
+          description: a manufacturers list
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BrandsList'
+                $ref: '#/components/schemas/ManufacturersList'
         "500":
           description: an error has occurred
           content:
@@ -58,23 +58,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
     post:
-      summary: create a new model railway brand
+      summary: create a new model railway manufacturer
       tags:
-        - brands
-      operationId: create-brand
+        - manufacturers
+      operationId: create-manufacturer
       requestBody:
-        description: a new brand
+        description: a new manufacturer
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BrandRequest'
+              $ref: '#/components/schemas/ManufacturerRequest'
       responses:
         "201":
-          description: a new brand has been created
+          description: a new manufacturer has been created
           headers:
             location:
-              description: the uri for the newly created brand
+              description: the uri for the newly created manufacturer
               explode: false
               schema:
                 format: uri
@@ -105,17 +105,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
 
-  /api/brands/{brandId}:
+  /api/manufacturers/{manufacturerId}:
     delete:
-      summary: delete the model railway brand identified by "brandId"
+      summary: delete the model railway manufacturer identified by "manufacturerId"
       tags:
-        - brands
-      operationId: delete-brand
+        - manufacturers
+      operationId: delete-manufacturer
       parameters:
-        - $ref: '#/components/parameters/BrandId'
+        - $ref: '#/components/parameters/ManufacturerId'
       responses:
         "204":
-          description: the brand has been deleted
+          description: the manufacturer has been deleted
         "404":
           description: the resource was not found
           content:
@@ -123,7 +123,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
         "409":
-          description: the brand is in use, not possible to delete it
+          description: the manufacturer is in use, not possible to delete it
           content:
             application/problem+json:
               schema:
@@ -135,19 +135,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
     get:
-      summary: get the model railway brand identified by "brandId"
+      summary: get the model railway manufacturer identified by "manufacturerId"
       tags:
-        - brands
-      operationId: get-brand
+        - manufacturers
+      operationId: get-manufacturer
       parameters:
-        - $ref: '#/components/parameters/BrandId'
+        - $ref: '#/components/parameters/ManufacturerId'
       responses:
         "200":
-          description: a model railway brand
+          description: a model railway manufacturer
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Brand'
+                $ref: '#/components/schemas/Manufacturer'
         "404":
           description: the resource was not found
           content:
@@ -161,26 +161,26 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
     put:
-      summary: update the model railway brand identified by "brandId"
+      summary: update the model railway manufacturer identified by "manufacturerId"
       tags:
-        - brands
-      operationId: update-brand
+        - manufacturers
+      operationId: update-manufacturer
       parameters:
-        - $ref: '#/components/parameters/BrandId'
+        - $ref: '#/components/parameters/ManufacturerId'
       requestBody:
-        description: the updated brand
+        description: the updated manufacturer
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BrandRequest'
+              $ref: '#/components/schemas/ManufacturerRequest'
       responses:
         "200":
-          description: the brand has been updated
+          description: the manufacturer has been updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Brand'
+                $ref: '#/components/schemas/Manufacturer'
         "400":
           description: the resource was not well formed
           content:
@@ -1752,11 +1752,11 @@ paths:
 
 components:
   parameters:
-    BrandId:
-      description: the brand unique identifier
+    ManufacturerId:
+      description: the manufacturer unique identifier
       explode: false
       in: path
-      name: brandId
+      name: manufacturerId
       required: true
       schema:
         type: string
@@ -1958,27 +1958,27 @@ components:
       enum:
         - 'METAL_DIE_CAST'
         - 'PLASTIC'
-    Brand:
+    Manufacturer:
       description: a model railways manufacturer
       type: object
       properties:
-        brand_id:
-          description: the brand unique identifier (an url encoded string)
+        manufacturer_id:
+          description: the manufacturer unique identifier (an url encoded string)
           type: string
           format: uri
           example: acme
         name:
-          description: the brand name
+          description: the manufacturer name
           type: string
           example: ACME
         registered_company_name:
-          description: the registered company name for this brand
+          description: the registered company name for this manufacturer
           type: string
           example: Associazione Costruzioni Modellistiche Esatte
         organization_entity_type:
           $ref: "#/components/schemas/OrganizationEntityType"
         group_name:
-          description: the group name in case the brand is part of a group
+          description: the group name in case the manufacturer is part of a group
           type: string
           example: None
         description:
@@ -1988,43 +1988,43 @@ components:
         contact_info:
           $ref: "#/components/schemas/ContactInfo"
         kind:
-          $ref: "#/components/schemas/BrandKind"
+          $ref: "#/components/schemas/ManufacturerKind"
         status:
-          $ref: "#/components/schemas/BrandStatus"
+          $ref: "#/components/schemas/ManufacturerStatus"
         socials:
           $ref: "#/components/schemas/Socials"
         metadata:
           $ref: "#/components/schemas/Metadata"
       required:
-        - brand_id
+        - manufacturer_id
         - name
         - kind
         - metadata
-    BrandKind:
-      description: the kind of brand
+    ManufacturerKind:
+      description: the kind of manufacturer
       type: string
       enum:
         - BRASS_MODELS
         - INDUSTRIAL
-    BrandRequest:
-      description: a request to create/update model railways brands
+    ManufacturerRequest:
+      description: a request to create/update model railways manufacturers
       type: object
       properties:
         name:
-          description: the brand name
+          description: the manufacturer name
           type: string
           minLength: 3
           maxLength: 50
           example: ACME
         registered_company_name:
-          description: the registered company name for this brand
+          description: the registered company name for this manufacturer
           type: string
           maxLength: 100
           example: Associazione Costruzioni Modellistiche Esatte
         organization_entity_type:
           $ref: "#/components/schemas/OrganizationEntityType"
         group_name:
-          description: the group name in case the brand is part of a group
+          description: the group name in case the manufacturer is part of a group
           type: string
           maxLength: 100
           example: None
@@ -2037,27 +2037,27 @@ components:
         socials:
           $ref: "#/components/schemas/Socials"
         kind:
-          $ref: "#/components/schemas/BrandKind"
+          $ref: "#/components/schemas/ManufacturerKind"
         status:
-          $ref: "#/components/schemas/BrandStatus"
+          $ref: "#/components/schemas/ManufacturerStatus"
       required:
         - name
         - kind
-    BrandStatus:
-      description: the status of a brand
+    ManufacturerStatus:
+      description: the status of a manufacturer
       type: string
       enum:
         - ACTIVE
         - OUT_OF_BUSINESS
-    BrandsList:
-      description: a model railway brands list
+    ManufacturersList:
+      description: a model railway manufacturers list
       type: object
       properties:
         items:
           description: the list items
           type: array
           items:
-            $ref: "#/components/schemas/Brand"
+            $ref: "#/components/schemas/Manufacturer"
       required:
         - items
     CatalogItem:
@@ -2069,8 +2069,8 @@ components:
           type: string
           format: uri
           example: acme-12345
-        brand:
-          $ref: "#/components/schemas/CatalogItemBrand"
+        manufacturer:
+          $ref: "#/components/schemas/CatalogItemManufacturer"
         item_number:
           description: the catalog item number
           type: string
@@ -2106,7 +2106,7 @@ components:
           $ref: "#/components/schemas/Metadata"
       required:
         - catalog_item_id
-        - brand
+        - manufacturer
         - item_number
         - scale
         - category
@@ -2114,21 +2114,21 @@ components:
         - epoch
         - count
         - metadata
-    CatalogItemBrand:
-      description: the catalog item brand
+    CatalogItemManufacturer:
+      description: the catalog item manufacturer
       type: object
       properties:
-        brand_id:
-          description: the brand unique identifier
+        manufacturer_id:
+          description: the manufacturer unique identifier
           type: string
           format: uri
           example: acme
         display:
-          description: the brand display text
+          description: the manufacturer display text
           type: string
           example: ACME
       required:
-        - brand_id
+        - manufacturer_id
         - display
     CatalogItemCategory:
       description: the catalog item category
@@ -2167,8 +2167,8 @@ components:
       description: the request to create/update catalog items
       type: object
       properties:
-        brand:
-          description: the brand name
+        manufacturer:
+          description: the manufacturer name
           type: string
           minLength: 3
           maxLength: 50
@@ -2215,7 +2215,7 @@ components:
           maximum: 99
           example: 1
       required:
-        - brand
+        - manufacturer
         - item_number
         - scale
         - category

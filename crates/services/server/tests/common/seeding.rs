@@ -1,10 +1,10 @@
 use sqlx::PgPool;
 
-pub async fn seed_brands(pool: &PgPool) {
-    sqlx::raw_sql(include_str!("../fixtures/brands.sql"))
+pub async fn seed_manufacturers(pool: &PgPool) {
+    sqlx::raw_sql(include_str!("../fixtures/manufacturers.sql"))
         .execute(pool)
         .await
-        .expect("Failed to seed brands");
+        .expect("Failed to seed manufacturers");
 }
 
 pub async fn seed_catalog_items(pool: &PgPool) {

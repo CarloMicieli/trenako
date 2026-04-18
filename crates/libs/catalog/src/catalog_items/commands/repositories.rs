@@ -1,6 +1,6 @@
-use crate::brands::brand_id::BrandId;
 use crate::catalog_items::catalog_item_id::CatalogItemId;
 use crate::catalog_items::commands::new_catalog_item::{NewCatalogItemCommand, NewRollingStockCommand};
+use crate::manufacturers::manufacturer_id::ManufacturerId;
 use crate::railways::railway_id::RailwayId;
 use crate::scales::scale_id::ScaleId;
 use async_trait::async_trait;
@@ -15,8 +15,12 @@ pub trait NewCatalogItemRepository<'db, U: UnitOfWork<'db>> {
     /// Inserts a new catalog item
     async fn insert(&self, new_item: &NewCatalogItemCommand, unit_of_work: &mut U) -> Result<(), anyhow::Error>;
 
-    /// Checks if the brand exists
-    async fn brand_exists(&self, brand_id: &BrandId, unit_of_work: &mut U) -> Result<bool, anyhow::Error>;
+    /// Checks if the manufacturer exists
+    async fn manufacturer_exists(
+        &self,
+        manufacturer_id: &ManufacturerId,
+        unit_of_work: &mut U,
+    ) -> Result<bool, anyhow::Error>;
 
     /// Checks if the scale exists
     async fn scale_exists(&self, scale_id: &ScaleId, unit_of_work: &mut U) -> Result<bool, anyhow::Error>;
@@ -34,11 +38,11 @@ pub trait NewRollingStockRepository<'db, U: UnitOfWork<'db>> {
 
 #[cfg(test)]
 pub mod in_memory {
-    use crate::brands::brand_id::BrandId;
     use crate::catalog_items::catalog_item_id::CatalogItemId;
     use crate::catalog_items::commands::new_catalog_item::{NewCatalogItemCommand, NewRollingStockCommand};
     use crate::catalog_items::commands::repositories::{NewCatalogItemRepository, NewRollingStockRepository};
     use crate::catalog_items::rolling_stock_id::RollingStockId;
+    use crate::manufacturers::manufacturer_id::ManufacturerId;
     use crate::railways::railway_id::RailwayId;
     use crate::scales::scale_id::ScaleId;
     use async_trait::async_trait;
@@ -49,7 +53,7 @@ pub mod in_memory {
     /// An in-memory catalog item repository
     pub struct InMemoryCatalogItemRepository {
         catalog_items: InMemoryRepository<CatalogItemId, NewCatalogItemCommand>,
-        brands: Vec<BrandId>,
+        manufacturers: Vec<ManufacturerId>,
         scales: Vec<ScaleId>,
     }
 
@@ -58,7 +62,7 @@ pub mod in_memory {
         pub fn empty() -> Self {
             InMemoryCatalogItemRepository {
                 catalog_items: InMemoryRepository::empty(),
-                brands: Vec::new(),
+                manufacturers: Vec::new(),
                 scales: Vec::new(),
             }
         }
@@ -68,14 +72,14 @@ pub mod in_memory {
             let id = CatalogItemId::from_str(&command.catalog_item_id.to_string()).unwrap();
             InMemoryCatalogItemRepository {
                 catalog_items: InMemoryRepository::of(id, command),
-                brands: Vec::new(),
+                manufacturers: Vec::new(),
                 scales: Vec::new(),
             }
         }
 
-        /// Adds the given brand id to the current repository
-        pub fn with_brand(mut self, brand_id: BrandId) -> Self {
-            self.brands.push(brand_id);
+        /// Adds the given manufacturer id to the current repository
+        pub fn with_manufacturer(mut self, manufacturer_id: ManufacturerId) -> Self {
+            self.manufacturers.push(manufacturer_id);
             self
         }
 
@@ -106,12 +110,12 @@ pub mod in_memory {
             Ok(())
         }
 
-        async fn brand_exists(
+        async fn manufacturer_exists(
             &self,
-            brand_id: &BrandId,
+            manufacturer_id: &ManufacturerId,
             _unit_of_work: &mut NoOpUnitOfWork,
         ) -> Result<bool, anyhow::Error> {
-            let result = self.brands.contains(brand_id);
+            let result = self.manufacturers.contains(manufacturer_id);
             Ok(result)
         }
 

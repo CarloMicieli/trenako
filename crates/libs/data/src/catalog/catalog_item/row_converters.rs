@@ -1,6 +1,6 @@
 use crate::catalog::catalog_item::catalog_item_row::CatalogItemRow;
 use crate::catalog::catalog_item::rolling_stock_row::RollingStockRow;
-use catalog::catalog_items::catalog_item::{CatalogItem, CatalogItemBrand, CatalogItemScale};
+use catalog::catalog_items::catalog_item::{CatalogItem, CatalogItemManufacturer, CatalogItemScale};
 use catalog::catalog_items::category::RollingStockCategory;
 use catalog::catalog_items::delivery_date::DeliveryDate;
 use catalog::catalog_items::epoch::Epoch;
@@ -26,9 +26,9 @@ impl ToOutputConverter<CatalogItem> for CatalogItemRow {
 
         Ok(CatalogItem {
             catalog_item_id: row.catalog_item_id,
-            brand: CatalogItemBrand {
-                brand_id: row.brand_id,
-                display: row.brand_display,
+            manufacturer: CatalogItemManufacturer {
+                manufacturer_id: row.manufacturer_id,
+                display: row.manufacturer_display,
             },
             item_number,
             scale: CatalogItemScale {
@@ -246,11 +246,11 @@ mod test {
     mod catalog_item_converter {
         use super::*;
         use crate::catalog::catalog_item::catalog_item_row::test::new_catalog_item_row;
-        use catalog::brands::brand_id::BrandId;
         use catalog::catalog_items::availability_status::AvailabilityStatus;
         use catalog::catalog_items::catalog_item_id::CatalogItemId;
         use catalog::catalog_items::category::Category;
         use catalog::catalog_items::power_method::PowerMethod;
+        use catalog::manufacturers::manufacturer_id::ManufacturerId;
         use catalog::scales::scale_id::ScaleId;
         use chrono::Utc;
         use pretty_assertions::assert_eq;
@@ -314,15 +314,15 @@ mod test {
         }
 
         #[test]
-        fn it_should_convert_catalog_item_brand() {
+        fn it_should_convert_catalog_item_manufacturer() {
             let row = CatalogItemRow { ..default_row() };
 
             let catalog_item = row.to_output().expect("the catalog item conversion failed");
 
             assert_eq!(
-                catalog_item.brand,
-                CatalogItemBrand {
-                    brand_id: BrandId::new("ACME"),
+                catalog_item.manufacturer,
+                CatalogItemManufacturer {
+                    manufacturer_id: ManufacturerId::new("ACME"),
                     display: String::from("ACME"),
                 }
             );

@@ -14,8 +14,8 @@ use walkdir::WalkDir;
 /// It represent a dataset
 #[derive(Debug, Default, PartialEq, Eq)]
 pub struct Dataset {
-    /// the brands resources (path contains `brands`)
-    pub brands: Vec<Resource>,
+    /// the manufacturers resources (path contains `manufacturers`)
+    pub manufacturers: Vec<Resource>,
     /// the catalog items resources (path contains `catalog_items`)
     pub catalog_items: Vec<Resource>,
     /// the railways resources (path contains `railways`)
@@ -30,7 +30,7 @@ impl Dataset {
         let mut dataset = Dataset::default();
         for resource in resources {
             match resource.resource_type {
-                ResourceType::Brands => dataset.brands.push(resource),
+                ResourceType::Manufacturers => dataset.manufacturers.push(resource),
                 ResourceType::CatalogItems => dataset.catalog_items.push(resource),
                 ResourceType::Railways => dataset.railways.push(resource),
                 ResourceType::Scales => dataset.scales.push(resource),
@@ -48,7 +48,7 @@ impl Dataset {
     }
 
     fn sort(&mut self) {
-        self.brands.sort();
+        self.manufacturers.sort();
         self.catalog_items.sort();
         self.railways.sort();
         self.scales.sort();
@@ -59,8 +59,8 @@ impl Display for Dataset {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(
             f,
-            "{} brand(s)\n{} catalog item(s)\n{} railway(s)\n{} scale(s)",
-            self.brands.len(),
+            "{} manufacturer(s)\n{} catalog item(s)\n{} railway(s)\n{} scale(s)",
+            self.manufacturers.len(),
             self.catalog_items.len(),
             self.railways.len(),
             self.scales.len()
@@ -140,7 +140,7 @@ impl Ord for Resource {
 
 #[derive(Debug, PartialEq, Eq, Copy, Clone, Serialize)]
 pub enum ResourceType {
-    Brands,
+    Manufacturers,
     CatalogItems,
     Railways,
     Scales,
@@ -150,7 +150,7 @@ impl ResourceType {
     fn from_os_str(input: &OsStr) -> Option<ResourceType> {
         if let Some(s) = input.to_str() {
             match s {
-                "brands" => Some(ResourceType::Brands),
+                "manufacturers" => Some(ResourceType::Manufacturers),
                 "catalog_items" => Some(ResourceType::CatalogItems),
                 "railways" => Some(ResourceType::Railways),
                 "scales" => Some(ResourceType::Scales),
@@ -179,23 +179,23 @@ mod test {
         #[test]
         fn it_should_create_new_datasets() {
             let resources = vec![
-                brand("brand2.json"),
+                manufacturer("manufacturer2.json"),
                 scale("scale2.json"),
                 catalog_item("catalog-item.json"),
                 scale("scale1.json"),
                 railway("railway1.json"),
-                brand("brand1.json"),
+                manufacturer("manufacturer1.json"),
             ];
 
             let dataset = Dataset::new(resources);
 
-            assert_eq!(2, dataset.brands.len());
+            assert_eq!(2, dataset.manufacturers.len());
             assert_eq!(1, dataset.catalog_items.len());
             assert_eq!(1, dataset.railways.len());
             assert_eq!(2, dataset.scales.len());
 
-            assert_eq!("brand1.json", dataset.brands[0].file_name);
-            assert_eq!("brand2.json", dataset.brands[1].file_name);
+            assert_eq!("manufacturer1.json", dataset.manufacturers[0].file_name);
+            assert_eq!("manufacturer2.json", dataset.manufacturers[1].file_name);
             assert_eq!("catalog-item.json", dataset.catalog_items[0].file_name);
             assert_eq!("railway1.json", dataset.railways[0].file_name);
             assert_eq!("scale1.json", dataset.scales[0].file_name);
@@ -205,17 +205,17 @@ mod test {
         #[test]
         fn it_should_display_datasets() {
             let resources = vec![
-                brand("brand2.json"),
+                manufacturer("manufacturer2.json"),
                 scale("scale2.json"),
                 catalog_item("catalog-item.json"),
                 scale("scale1.json"),
                 railway("railway1.json"),
-                brand("brand1.json"),
+                manufacturer("manufacturer1.json"),
             ];
 
             let dataset = Dataset::new(resources);
 
-            let expected = r#"2 brand(s)
+            let expected = r#"2 manufacturer(s)
 1 catalog item(s)
 1 railway(s)
 2 scale(s)"#;
@@ -240,22 +240,22 @@ mod test {
         #[test]
         fn it_should_display_resources() {
             let resource = resource("foo.json");
-            assert_eq!("[Brands] file_name: foo.json", resource.to_string());
+            assert_eq!("[Manufacturers] file_name: foo.json", resource.to_string());
         }
     }
 
     fn resource(file_name: &str) -> Resource {
         Resource {
             file_name: file_name.to_owned(),
-            resource_type: ResourceType::Brands,
+            resource_type: ResourceType::Manufacturers,
             content: "".to_owned(),
         }
     }
 
-    fn brand(file_name: &str) -> Resource {
+    fn manufacturer(file_name: &str) -> Resource {
         Resource {
             file_name: file_name.to_owned(),
-            resource_type: ResourceType::Brands,
+            resource_type: ResourceType::Manufacturers,
             content: "".to_owned(),
         }
     }

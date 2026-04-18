@@ -120,7 +120,7 @@ CREATE TYPE chassis_type AS ENUM (
 CREATE TABLE IF NOT EXISTS public.catalog_items
 (
     catalog_item_id     varchar(76)           NOT NULL,
-    brand_id            varchar(50)           NOT NULL,
+    manufacturer_id            varchar(50)           NOT NULL,
     item_number         varchar(25)           NOT NULL,
     scale_id            varchar(25)           NOT NULL,
     category            catalog_item_category NOT NULL,
@@ -141,8 +141,8 @@ CREATE TABLE IF NOT EXISTS public.catalog_items
     last_modified_at    timestamptz,
     version             integer               NOT NULL DEFAULT 1,
     CONSTRAINT "PK_catalog_items" PRIMARY KEY (catalog_item_id),
-    CONSTRAINT "FK_catalog_items_brands" FOREIGN KEY (brand_id)
-        REFERENCES public.brands (brand_id) MATCH SIMPLE
+    CONSTRAINT "FK_catalog_items_manufacturers" FOREIGN KEY (manufacturer_id)
+        REFERENCES public.manufacturers (manufacturer_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT "FK_catalog_items_scales" FOREIGN KEY (scale_id)

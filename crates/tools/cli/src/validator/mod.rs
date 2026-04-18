@@ -11,7 +11,7 @@ pub fn validate_dataset(dataset: Dataset) -> Result<Vec<Validated>, ValidatorErr
     let validators = Validators::new()?;
 
     let it: Vec<Validated> = dataset
-        .brands
+        .manufacturers
         .iter()
         .map(|it| validators.validate(it))
         .chain(dataset.catalog_items.iter().map(|it| validators.validate(it)))
@@ -112,7 +112,7 @@ pub enum ValidatorError {
 }
 
 pub struct Validators {
-    brands: JsonSchemaValidator,
+    manufacturers: JsonSchemaValidator,
     catalog_items: JsonSchemaValidator,
     railways: JsonSchemaValidator,
     scales: JsonSchemaValidator,
@@ -121,13 +121,13 @@ pub struct Validators {
 impl Validators {
     /// Creates a new schema validator for the dataset resources
     pub fn new() -> Result<Self, ValidatorError> {
-        let brands = JsonSchemaValidator::new(schemas::BRANDS_SCHEMA)?;
+        let manufacturers = JsonSchemaValidator::new(schemas::MANUFACTURERS_SCHEMA)?;
         let catalog_items = JsonSchemaValidator::new(schemas::CATALOG_ITEMS_SCHEMA)?;
         let railways = JsonSchemaValidator::new(schemas::RAILWAYS_SCHEMA)?;
         let scales = JsonSchemaValidator::new(schemas::SCALES_SCHEMA)?;
 
         Ok(Self {
-            brands,
+            manufacturers,
             catalog_items,
             railways,
             scales,
@@ -136,7 +136,7 @@ impl Validators {
 
     pub fn validate(&self, input: &Resource) -> Validated {
         let result = match input.resource_type {
-            ResourceType::Brands => self.brands.validate(input),
+            ResourceType::Manufacturers => self.manufacturers.validate(input),
             ResourceType::CatalogItems => self.catalog_items.validate(input),
             ResourceType::Railways => self.railways.validate(input),
             ResourceType::Scales => self.scales.validate(input),
@@ -156,7 +156,7 @@ mod test {
 
         #[test]
         fn it_should_parse_the_json_schemas() {
-            assert!(json_schema_from_str(schemas::BRANDS_SCHEMA).is_ok());
+            assert!(json_schema_from_str(schemas::MANUFACTURERS_SCHEMA).is_ok());
             assert!(json_schema_from_str(schemas::CATALOG_ITEMS_SCHEMA).is_ok());
             assert!(json_schema_from_str(schemas::RAILWAYS_SCHEMA).is_ok());
             assert!(json_schema_from_str(schemas::SCALES_SCHEMA).is_ok());
@@ -171,8 +171,8 @@ mod test {
         }
 
         #[test]
-        fn it_should_validate_a_valid_brand() {
-            let brand_value = resource_from_json(
+        fn it_should_validate_a_valid_manufacturer() {
+            let manufacturer_value = resource_from_json(
                 r#"
                 {
                   "name" : "ACME",
@@ -206,11 +206,11 @@ mod test {
                   "kind" : "INDUSTRIAL",
                   "status" : "ACTIVE"
                 }"#,
-                ResourceType::Brands,
+                ResourceType::Manufacturers,
             );
 
             let validator = Validators::new().unwrap();
-            let result = validator.validate(&brand_value);
+            let result = validator.validate(&manufacturer_value);
             assert_eq!(Validated::Valid, result);
         }
 
@@ -219,7 +219,7 @@ mod test {
             let catalog_item_value = resource_from_json(
                 r#"
                 {
-                  "brand" : "ACME",
+                  "manufacturer" : "ACME",
                   "item_number" : "60023",
                   "scale" : "H0",
                   "category" : "LOCOMOTIVES",

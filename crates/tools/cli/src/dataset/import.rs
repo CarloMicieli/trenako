@@ -20,11 +20,11 @@ pub fn import_catalog_items(
                 if dry_run {
                     println!("{}", json);
                 } else {
-                    let brand = Slug::new(&catalog_item.brand.replace('/', "_"));
+                    let manufacturer = Slug::new(&catalog_item.manufacturer.replace('/', "_"));
                     let item_number = &catalog_item.item_number;
                     let category = &catalog_item.category.to_string().to_lowercase();
 
-                    let dir = format!("{}/{}/{}", output, brand, category);
+                    let dir = format!("{}/{}/{}", output, manufacturer, category);
                     fs::create_dir_all(&dir).with_context(|| format!("unable to create the {} directory", &dir))?;
                     let filename = format!("{}/{}.json", &dir, item_number);
                     println!("Writing {}...", filename);

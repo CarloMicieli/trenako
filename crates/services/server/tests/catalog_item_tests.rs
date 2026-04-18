@@ -1,8 +1,7 @@
 use crate::common::database::start_postgres;
-use crate::common::seeding::{seed_brands, seed_catalog_items, seed_railways, seed_scales};
+use crate::common::seeding::{seed_catalog_items, seed_manufacturers, seed_railways, seed_scales};
 use crate::common::spawn_app;
 use crate::common::templates::{render, setup_hbs};
-use catalog::brands::brand_id::BrandId;
 use catalog::catalog_items::availability_status::AvailabilityStatus;
 use catalog::catalog_items::catalog_item::CatalogItem;
 use catalog::catalog_items::catalog_item_id::CatalogItemId;
@@ -18,6 +17,7 @@ use catalog::catalog_items::rolling_stock::RollingStock;
 use catalog::catalog_items::rolling_stock_id::RollingStockId;
 use catalog::catalog_items::service_level::ServiceLevel;
 use catalog::catalog_items::technical_specifications::{BodyShellType, ChassisType, CouplingSocket, FeatureFlag};
+use catalog::manufacturers::manufacturer_id::ManufacturerId;
 use catalog::railways::railway_id::RailwayId;
 use catalog::scales::scale_id::ScaleId;
 use reqwest::StatusCode;
@@ -53,7 +53,7 @@ async fn it_should_find_catalog_items_by_id() {
     sut.run_database_migrations().await;
 
     let pg_pool = sut.pg_pool();
-    seed_brands(&pg_pool).await;
+    seed_manufacturers(&pg_pool).await;
     seed_railways(&pg_pool).await;
     seed_scales(&pg_pool).await;
     seed_catalog_items(&pg_pool).await;
@@ -70,8 +70,8 @@ async fn it_should_find_catalog_items_by_id() {
         .expect("Failed to fetch the response body");
 
     assert_eq!(body.catalog_item_id, CatalogItemId::from_str("acme-60011").unwrap());
-    assert_eq!(body.brand.brand_id, BrandId::new("ACME"));
-    assert_eq!(body.brand.display, String::from("ACME"));
+    assert_eq!(body.manufacturer.manufacturer_id, ManufacturerId::new("ACME"));
+    assert_eq!(body.manufacturer.display, String::from("ACME"));
     assert_eq!(body.category, Category::Locomotives);
     assert_eq!(body.scale.scale_id, ScaleId::new("H0"));
     assert_eq!(body.scale.display, String::from("H0"));
@@ -132,13 +132,13 @@ async fn it_should_return_409_when_the_catalog_item_already_exists() {
     sut.run_database_migrations().await;
 
     let pg_pool = sut.pg_pool();
-    seed_brands(&pg_pool).await;
+    seed_manufacturers(&pg_pool).await;
     seed_railways(&pg_pool).await;
     seed_scales(&pg_pool).await;
     seed_catalog_items(&pg_pool).await;
 
     let request = json!({
-        "brand" : "ACME",
+        "manufacturer" : "ACME",
         "item_number" : "60011",
         "category" : "LOCOMOTIVES",
         "scale" : "H0",
@@ -169,7 +169,7 @@ async fn it_should_return_409_when_the_catalog_item_already_exists() {
 }
 
 #[tokio::test]
-async fn it_should_return_422_when_the_brand_is_not_found() {
+async fn it_should_return_422_when_the_manufacturer_is_not_found() {
     let (_container, port) = start_postgres().await;
     let sut = spawn_app(port).await;
     sut.run_database_migrations().await;
@@ -178,7 +178,7 @@ async fn it_should_return_422_when_the_brand_is_not_found() {
     seed_scales(&pg_pool).await;
 
     let request = json!({
-        "brand" : "ACME",
+        "manufacturer" : "ACME",
         "item_number" : "60011",
         "category" : "LOCOMOTIVES",
         "scale" : "H0",
@@ -215,10 +215,10 @@ async fn it_should_return_422_when_the_scale_is_not_found() {
     sut.run_database_migrations().await;
 
     let pg_pool = sut.pg_pool();
-    seed_brands(&pg_pool).await;
+    seed_manufacturers(&pg_pool).await;
 
     let request = json!({
-        "brand" : "ACME",
+        "manufacturer" : "ACME",
         "item_number" : "60011",
         "category" : "LOCOMOTIVES",
         "scale" : "H0",
@@ -255,7 +255,7 @@ async fn it_should_return_422_when_the_railway_is_not_found() {
     sut.run_database_migrations().await;
 
     let pg_pool = sut.pg_pool();
-    seed_brands(&pg_pool).await;
+    seed_manufacturers(&pg_pool).await;
     seed_scales(&pg_pool).await;
 
     let reg = setup_hbs();
@@ -281,7 +281,7 @@ async fn it_should_create_a_new_locomotive() {
     sut.run_database_migrations().await;
 
     let pg_pool = sut.pg_pool();
-    seed_brands(&pg_pool).await;
+    seed_manufacturers(&pg_pool).await;
     seed_railways(&pg_pool).await;
     seed_scales(&pg_pool).await;
 
@@ -308,7 +308,7 @@ async fn it_should_create_a_new_locomotive() {
     let saved = fetch_saved_catalog_item(catalog_item_id.clone(), &pg_pool).await;
     let item = saved.catalog_item;
 
-    assert_eq!(BrandId::new("ACME"), item.brand_id);
+    assert_eq!(ManufacturerId::new("ACME"), item.manufacturer_id);
     assert_eq!("123456", item.item_number);
     assert_eq!(Category::Locomotives, item.category);
     assert_eq!(ScaleId::new("H0"), item.scale_id);
@@ -370,7 +370,7 @@ async fn it_should_create_a_new_electric_multiple_unit() {
     sut.run_database_migrations().await;
 
     let pg_pool = sut.pg_pool();
-    seed_brands(&pg_pool).await;
+    seed_manufacturers(&pg_pool).await;
     seed_railways(&pg_pool).await;
     seed_scales(&pg_pool).await;
 
@@ -378,7 +378,7 @@ async fn it_should_create_a_new_electric_multiple_unit() {
     let expected_location = format!("{}/{}", API_CATALOG_ITEMS, catalog_item_id);
 
     let request = json!({
-        "brand" : "ACME",
+        "manufacturer" : "ACME",
         "item_number" : "123456",
         "category" : "ELECTRIC_MULTIPLE_UNITS",
         "scale" : "H0",
@@ -471,7 +471,7 @@ async fn it_should_create_a_new_electric_multiple_unit() {
     let saved = fetch_saved_catalog_item(catalog_item_id.clone(), &pg_pool).await;
     let item = saved.catalog_item;
 
-    assert_eq!(BrandId::new("ACME"), item.brand_id);
+    assert_eq!(ManufacturerId::new("ACME"), item.manufacturer_id);
     assert_eq!("123456", item.item_number);
     assert_eq!(Category::ElectricMultipleUnits, item.category);
     assert_eq!(ScaleId::new("H0"), item.scale_id);
@@ -580,7 +580,7 @@ async fn it_should_create_a_new_railcar() {
     sut.run_database_migrations().await;
 
     let pg_pool = sut.pg_pool();
-    seed_brands(&pg_pool).await;
+    seed_manufacturers(&pg_pool).await;
     seed_railways(&pg_pool).await;
     seed_scales(&pg_pool).await;
 
@@ -588,7 +588,7 @@ async fn it_should_create_a_new_railcar() {
     let expected_location = format!("{}/{}", API_CATALOG_ITEMS, catalog_item_id);
 
     let request = json!({
-        "brand" : "ACME",
+        "manufacturer" : "ACME",
         "item_number" : "123456",
         "category" : "RAILCARS",
         "scale" : "H0",
@@ -680,7 +680,7 @@ async fn it_should_create_a_new_railcar() {
     let saved = fetch_saved_catalog_item(catalog_item_id.clone(), &pg_pool).await;
     let item = saved.catalog_item;
 
-    assert_eq!(BrandId::new("ACME"), item.brand_id);
+    assert_eq!(ManufacturerId::new("ACME"), item.manufacturer_id);
     assert_eq!("123456", item.item_number);
     assert_eq!(Category::Railcars, item.category);
     assert_eq!(ScaleId::new("H0"), item.scale_id);
@@ -779,7 +779,7 @@ async fn it_should_create_a_new_passenger_car() {
     sut.run_database_migrations().await;
 
     let pg_pool = sut.pg_pool();
-    seed_brands(&pg_pool).await;
+    seed_manufacturers(&pg_pool).await;
     seed_railways(&pg_pool).await;
     seed_scales(&pg_pool).await;
 
@@ -787,7 +787,7 @@ async fn it_should_create_a_new_passenger_car() {
     let expected_location = format!("{}/{}", API_CATALOG_ITEMS, catalog_item_id);
 
     let request = json!({
-        "brand" : "ACME",
+        "manufacturer" : "ACME",
         "item_number" : "123456",
         "category" : "PASSENGER_CARS",
         "scale" : "H0",
@@ -849,7 +849,7 @@ async fn it_should_create_a_new_passenger_car() {
     let saved = fetch_saved_catalog_item(catalog_item_id.clone(), &pg_pool).await;
     let item = saved.catalog_item;
 
-    assert_eq!(BrandId::new("ACME"), item.brand_id);
+    assert_eq!(ManufacturerId::new("ACME"), item.manufacturer_id);
     assert_eq!("123456", item.item_number);
     assert_eq!(Category::PassengerCars, item.category);
     assert_eq!(ScaleId::new("H0"), item.scale_id);
@@ -900,7 +900,7 @@ async fn it_should_create_a_new_freight_car() {
     sut.run_database_migrations().await;
 
     let pg_pool = sut.pg_pool();
-    seed_brands(&pg_pool).await;
+    seed_manufacturers(&pg_pool).await;
     seed_railways(&pg_pool).await;
     seed_scales(&pg_pool).await;
 
@@ -908,7 +908,7 @@ async fn it_should_create_a_new_freight_car() {
     let expected_location = format!("{}/{}", API_CATALOG_ITEMS, catalog_item_id);
 
     let request = json!({
-        "brand" : "ACME",
+        "manufacturer" : "ACME",
         "item_number" : "123456",
         "category" : "FREIGHT_CARS",
         "scale" : "H0",
@@ -968,7 +968,7 @@ async fn it_should_create_a_new_freight_car() {
     let saved = fetch_saved_catalog_item(catalog_item_id.clone(), &pg_pool).await;
     let item = saved.catalog_item;
 
-    assert_eq!(BrandId::new("ACME"), item.brand_id);
+    assert_eq!(ManufacturerId::new("ACME"), item.manufacturer_id);
     assert_eq!("123456", item.item_number);
     assert_eq!(Category::FreightCars, item.category);
     assert_eq!(ScaleId::new("H0"), item.scale_id);
@@ -1022,7 +1022,7 @@ async fn fetch_saved_catalog_item(catalog_item_id: CatalogItemId, pg_pool: &PgPo
         SavedCatalogItem,
         r#"SELECT
             item_number,
-            brand_id as "brand_id: BrandId",
+            manufacturer_id as "manufacturer_id: ManufacturerId",
             scale_id as "scale_id: ScaleId",
             category as "category: Category",
             power_method as "power_method: PowerMethod",
@@ -1095,7 +1095,7 @@ struct Saved {
 
 #[derive(Debug)]
 struct SavedCatalogItem {
-    brand_id: BrandId,
+    manufacturer_id: ManufacturerId,
     item_number: String,
     category: Category,
     scale_id: ScaleId,

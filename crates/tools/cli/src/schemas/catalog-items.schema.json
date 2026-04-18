@@ -3,7 +3,7 @@
   "title": "CatalogItem",
   "type": "object",
   "required": [
-    "brand",
+    "manufacturer",
     "item_number",
     "scale",
     "category",
@@ -13,7 +13,7 @@
     "count"
   ],
   "properties": {
-    "brand": {
+    "manufacturer": {
       "type": "string",
       "minLength": 3,
       "maxLength": 50

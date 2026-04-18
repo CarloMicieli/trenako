@@ -1,9 +1,9 @@
 -- noinspection SqlNoDataSourceInspectionForFile
-CREATE TYPE brand_kind AS ENUM (
+CREATE TYPE manufacturer_kind AS ENUM (
     'BRASS_MODELS',
     'INDUSTRIAL'
     );
-CREATE TYPE brand_status AS ENUM (
+CREATE TYPE manufacturer_status AS ENUM (
     'ACTIVE',
     'OUT_OF_BUSINESS'
     );
@@ -39,9 +39,9 @@ CREATE TYPE scale_standard AS ENUM (
     'NMRA'
     );
 
-CREATE TABLE IF NOT EXISTS public.brands
+CREATE TABLE IF NOT EXISTS public.manufacturers
 (
-    brand_id                 varchar(50) NOT NULL,
+    manufacturer_id                 varchar(50) NOT NULL,
     name                     varchar(50) NOT NULL,
     registered_company_name  varchar(100),
     organization_entity_type organization_entity_type,
@@ -50,8 +50,8 @@ CREATE TABLE IF NOT EXISTS public.brands
     description_en           varchar(2500),
     description_fr           varchar(2500),
     description_it           varchar(2500),
-    kind                     brand_kind  NOT NULL,
-    status                   brand_status,
+    kind                     manufacturer_kind  NOT NULL,
+    status                   manufacturer_status,
     contact_email            varchar(250),
     contact_website_url      varchar(100),
     contact_phone            varchar(20),
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS public.brands
     created_at               timestamptz NOT NULL,
     last_modified_at         timestamptz,
     version                  integer     NOT NULL DEFAULT 1,
-    CONSTRAINT "PK_brands" PRIMARY KEY (brand_id)
+    CONSTRAINT "PK_manufacturers" PRIMARY KEY (manufacturer_id)
 );
 
 CREATE TABLE IF NOT EXISTS public.railways

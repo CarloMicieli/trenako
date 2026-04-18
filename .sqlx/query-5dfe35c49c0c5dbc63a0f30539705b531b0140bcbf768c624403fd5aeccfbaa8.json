@@ -1,0 +1,224 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT\n                    manufacturer_id as \"manufacturer_id!: ManufacturerId\", \n                    name, registered_company_name, \n                    organization_entity_type as \"organization_entity_type: OrganizationEntityType\", \n                    group_name, \n                    description_de, \n                    description_en,\n                    description_fr, \n                    description_it,\n                    kind as \"kind: ManufacturerKind\", \n                    status as \"status?: ManufacturerStatus\",\n                    contact_email as \"contact_email?: MailAddress\", \n                    contact_website_url as \"contact_website_url?: WebsiteUrl\", \n                    contact_phone as \"contact_phone?: PhoneNumber\",\n                    address_street_address, address_extended_address, address_city, address_region, address_postal_code, address_country,\n                    socials_facebook as \"socials_facebook?: Handler\", \n                    socials_instagram as \"socials_instagram?: Handler\",     \n                    socials_linkedin as \"socials_linkedin?: Handler\",    \n                    socials_twitter as \"socials_twitter?: Handler\",    \n                    socials_youtube as \"socials_youtube?: Handler\",\n                    created_at,\n                    last_modified_at,\n                    version\n                FROM manufacturers WHERE manufacturer_id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "manufacturer_id!: ManufacturerId",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "registered_company_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "organization_entity_type: OrganizationEntityType",
+        "type_info": {
+          "Custom": {
+            "name": "organization_entity_type",
+            "kind": {
+              "Enum": [
+                "CIVIL_LAW_PARTNERSHIP",
+                "ENTREPRENEURIAL_COMPANY",
+                "GLOBAL_PARTNERSHIP",
+                "LIMITED_COMPANY",
+                "LIMITED_PARTNERSHIP",
+                "LIMITED_PARTNERSHIP_LIMITED_COMPANY",
+                "OTHER",
+                "PUBLIC_INSTITUTION",
+                "PUBLIC_LIMITED_COMPANY",
+                "REGISTERED_SOLE_TRADER",
+                "SOLE_TRADER",
+                "STATE_OWNED_ENTERPRISE"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "group_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "description_de",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 6,
+        "name": "description_en",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 7,
+        "name": "description_fr",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 8,
+        "name": "description_it",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 9,
+        "name": "kind: ManufacturerKind",
+        "type_info": {
+          "Custom": {
+            "name": "manufacturer_kind",
+            "kind": {
+              "Enum": [
+                "BRASS_MODELS",
+                "INDUSTRIAL"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 10,
+        "name": "status?: ManufacturerStatus",
+        "type_info": {
+          "Custom": {
+            "name": "manufacturer_status",
+            "kind": {
+              "Enum": [
+                "ACTIVE",
+                "OUT_OF_BUSINESS"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 11,
+        "name": "contact_email?: MailAddress",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 12,
+        "name": "contact_website_url?: WebsiteUrl",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 13,
+        "name": "contact_phone?: PhoneNumber",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 14,
+        "name": "address_street_address",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 15,
+        "name": "address_extended_address",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 16,
+        "name": "address_city",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 17,
+        "name": "address_region",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 18,
+        "name": "address_postal_code",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 19,
+        "name": "address_country",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 20,
+        "name": "socials_facebook?: Handler",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 21,
+        "name": "socials_instagram?: Handler",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 22,
+        "name": "socials_linkedin?: Handler",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 23,
+        "name": "socials_twitter?: Handler",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 24,
+        "name": "socials_youtube?: Handler",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 25,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 26,
+        "name": "last_modified_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 27,
+        "name": "version",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true,
+      false
+    ]
+  },
+  "hash": "5dfe35c49c0c5dbc63a0f30539705b531b0140bcbf768c624403fd5aeccfbaa8"
+}

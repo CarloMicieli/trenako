@@ -1,10 +1,10 @@
 //! the catalog items row definition
 
-use catalog::brands::brand_id::BrandId;
 use catalog::catalog_items::availability_status::AvailabilityStatus;
 use catalog::catalog_items::catalog_item_id::CatalogItemId;
 use catalog::catalog_items::category::Category;
 use catalog::catalog_items::power_method::PowerMethod;
+use catalog::manufacturers::manufacturer_id::ManufacturerId;
 use catalog::scales::scale_id::ScaleId;
 use chrono::{DateTime, Utc};
 
@@ -12,8 +12,8 @@ use chrono::{DateTime, Utc};
 #[derive(Debug)]
 pub struct CatalogItemRow {
     pub catalog_item_id: CatalogItemId,
-    pub brand_id: BrandId,
-    pub brand_display: String,
+    pub manufacturer_id: ManufacturerId,
+    pub manufacturer_display: String,
     pub item_number: String,
     pub category: Category,
     pub scale_id: ScaleId,
@@ -44,16 +44,16 @@ pub mod test {
 
     #[allow(dead_code)]
     pub fn new_catalog_item_row(
-        brand: &str,
+        manufacturer: &str,
         item_number: &str,
         scale: &str,
         created_at: DateTime<Utc>,
     ) -> CatalogItemRow {
         let item_number = ItemNumber::new(item_number);
         CatalogItemRow {
-            catalog_item_id: CatalogItemId::of(&BrandId::new(brand), &item_number),
-            brand_id: BrandId::new(brand),
-            brand_display: String::from(brand),
+            catalog_item_id: CatalogItemId::of(&ManufacturerId::new(manufacturer), &item_number),
+            manufacturer_id: ManufacturerId::new(manufacturer),
+            manufacturer_display: String::from(manufacturer),
             item_number: item_number.value().to_string(),
             category: Category::Locomotives,
             scale_id: ScaleId::new(scale),

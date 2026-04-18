@@ -1,7 +1,5 @@
 //! the catalog item view model
 
-use crate::brands::brand::Brand;
-use crate::brands::brand_id::BrandId;
 use crate::catalog_items::availability_status::AvailabilityStatus;
 use crate::catalog_items::catalog_item_id::CatalogItemId;
 use crate::catalog_items::category::Category;
@@ -10,6 +8,8 @@ use crate::catalog_items::epoch::Epoch;
 use crate::catalog_items::item_number::ItemNumber;
 use crate::catalog_items::power_method::PowerMethod;
 use crate::catalog_items::rolling_stock::RollingStock;
+use crate::manufacturers::manufacturer::Manufacturer;
+use crate::manufacturers::manufacturer_id::ManufacturerId;
 use crate::scales::scale::Scale;
 use crate::scales::scale_id::ScaleId;
 use common::localized_text::LocalizedText;
@@ -24,8 +24,8 @@ use std::{cmp, convert, fmt};
 pub struct CatalogItem {
     /// the unique identifier for this catalog item
     pub catalog_item_id: CatalogItemId,
-    /// the brand
-    pub brand: CatalogItemBrand,
+    /// the manufacturer
+    pub manufacturer: CatalogItemManufacturer,
     /// the item number
     pub item_number: ItemNumber,
     /// the scale
@@ -54,7 +54,7 @@ pub struct CatalogItem {
 
 impl cmp::PartialEq for CatalogItem {
     fn eq(&self, other: &Self) -> bool {
-        self.brand == other.brand && self.item_number == other.item_number
+        self.manufacturer == other.manufacturer && self.item_number == other.item_number
     }
 }
 
@@ -68,7 +68,7 @@ impl cmp::PartialOrd for CatalogItem {
 
 impl cmp::Ord for CatalogItem {
     fn cmp(&self, other: &Self) -> cmp::Ordering {
-        let cmp1 = self.brand().cmp(other.brand());
+        let cmp1 = self.manufacturer().cmp(other.manufacturer());
         if cmp1 == cmp::Ordering::Equal {
             return self.item_number.cmp(&other.item_number);
         }
@@ -81,7 +81,7 @@ impl CatalogItem {
     /// Creates a new catalog item
     pub fn new(
         catalog_item_id: CatalogItemId,
-        brand: CatalogItemBrand,
+        manufacturer: CatalogItemManufacturer,
         item_number: ItemNumber,
         category: Category,
         scale: CatalogItemScale,
@@ -97,7 +97,7 @@ impl CatalogItem {
     ) -> Self {
         CatalogItem {
             catalog_item_id,
-            brand,
+            manufacturer,
             item_number,
             category,
             description: description.map(LocalizedText::with_italian).unwrap_or_default(),
@@ -118,12 +118,12 @@ impl CatalogItem {
         &self.catalog_item_id
     }
 
-    /// the brand for this catalog item.
-    pub fn brand(&self) -> &CatalogItemBrand {
-        &self.brand
+    /// the manufacturer for this catalog item.
+    pub fn manufacturer(&self) -> &CatalogItemManufacturer {
+        &self.manufacturer
     }
 
-    /// the item number as in the corresponding brand catalog.
+    /// the item number as in the corresponding manufacturer catalog.
     pub fn item_number(&self) -> &ItemNumber {
         &self.item_number
     }
@@ -186,43 +186,43 @@ impl CatalogItem {
 
 /// The model railways manufacturer for a catalog item
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Serialize, Deserialize)]
-pub struct CatalogItemBrand {
-    /// the brand unique identifier
-    pub brand_id: BrandId,
-    /// the brand display text
+pub struct CatalogItemManufacturer {
+    /// the manufacturer unique identifier
+    pub manufacturer_id: ManufacturerId,
+    /// the manufacturer display text
     pub display: String,
 }
 
-impl CatalogItemBrand {
-    /// Creates a new brand with the given display text.
-    pub fn new(brand_id: BrandId, display: &str) -> Self {
-        CatalogItemBrand {
-            brand_id,
+impl CatalogItemManufacturer {
+    /// Creates a new manufacturer with the given display text.
+    pub fn new(manufacturer_id: ManufacturerId, display: &str) -> Self {
+        CatalogItemManufacturer {
+            manufacturer_id,
             display: display.to_owned(),
         }
     }
 
-    /// this brand unique identifier
-    pub fn brand_id(&self) -> &BrandId {
-        &self.brand_id
+    /// this manufacturer unique identifier
+    pub fn manufacturer_id(&self) -> &ManufacturerId {
+        &self.manufacturer_id
     }
 
-    /// this brand display text
+    /// this manufacturer display text
     pub fn display(&self) -> &str {
         &self.display
     }
 }
 
-impl fmt::Display for CatalogItemBrand {
+impl fmt::Display for CatalogItemManufacturer {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, "{}", &self.display)
     }
 }
 
-impl convert::From<Brand> for CatalogItemBrand {
-    fn from(value: Brand) -> Self {
-        CatalogItemBrand {
-            brand_id: value.brand_id().clone(),
+impl convert::From<Manufacturer> for CatalogItemManufacturer {
+    fn from(value: Manufacturer) -> Self {
+        CatalogItemManufacturer {
+            manufacturer_id: value.manufacturer_id().clone(),
             display: value.to_string(),
         }
     }
@@ -276,28 +276,28 @@ impl convert::From<Scale> for CatalogItemScale {
 mod tests {
     use super::*;
 
-    mod catalog_item_brands {
+    mod catalog_item_manufacturers {
         use super::*;
-        use crate::brands::test_data::acme;
+        use crate::manufacturers::test_data::acme;
         use pretty_assertions::assert_eq;
 
         #[test]
-        fn it_should_create_new_brands() {
-            let b = CatalogItemBrand::new(BrandId::new("ACME"), "ACME");
-            assert_eq!(&BrandId::new("ACME"), b.brand_id());
+        fn it_should_create_new_manufacturers() {
+            let b = CatalogItemManufacturer::new(ManufacturerId::new("ACME"), "ACME");
+            assert_eq!(&ManufacturerId::new("ACME"), b.manufacturer_id());
             assert_eq!("ACME", b.display());
         }
 
         #[test]
-        fn it_should_display_brand_as_string() {
-            let b = CatalogItemBrand::new(BrandId::new("ACME"), "ACME");
+        fn it_should_display_manufacturer_as_string() {
+            let b = CatalogItemManufacturer::new(ManufacturerId::new("ACME"), "ACME");
             assert_eq!("ACME", b.to_string());
         }
 
         #[test]
-        fn it_should_convert_from_brands() {
-            let b: CatalogItemBrand = acme().into();
-            assert_eq!(&BrandId::new("ACME"), b.brand_id());
+        fn it_should_convert_from_manufacturers() {
+            let b: CatalogItemManufacturer = acme().into();
+            assert_eq!(&ManufacturerId::new("ACME"), b.manufacturer_id());
             assert_eq!("ACME", b.display());
         }
     }
@@ -337,7 +337,7 @@ mod tests {
         #[test]
         fn it_should_create_new_catalog_items() {
             let id = CatalogItemId::from_str("acme_123456").unwrap();
-            let acme = CatalogItemBrand::new(BrandId::new("ACME"), "ACME");
+            let acme = CatalogItemManufacturer::new(ManufacturerId::new("ACME"), "ACME");
             let half_zero = CatalogItemScale::new(ScaleId::new("H0"), "H0");
             let item_number = ItemNumber::new("123456");
             let now: DateTime<Utc> = Utc::now();
@@ -360,7 +360,7 @@ mod tests {
             );
 
             assert_eq!(&id, catalog_item.id());
-            assert_eq!(&acme, catalog_item.brand());
+            assert_eq!(&acme, catalog_item.manufacturer());
             assert_eq!(&item_number, catalog_item.item_number());
             assert_eq!(Category::Locomotives, catalog_item.category());
             assert_eq!(Some(&String::from("test description")), catalog_item.description());
