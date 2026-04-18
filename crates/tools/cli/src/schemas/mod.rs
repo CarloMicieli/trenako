@@ -1,5 +1,5 @@
 /// the manufacturers json schema
-pub const BRANDS_SCHEMA: &str = include_str!("manufacturers.schema.json");
+pub const MANUFACTURERS_SCHEMA: &str = include_str!("manufacturers.schema.json");
 
 /// the catalog items json schema
 pub const CATALOG_ITEMS_SCHEMA: &str = include_str!("catalog-items.schema.json");

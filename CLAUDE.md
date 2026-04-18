@@ -12,7 +12,7 @@ The project uses a **modular workspace** with the following structure:
 
 - **`crates/libs/`**: Core libraries
   - `common`: Shared domain types, entities, validation, and utilities (addresses, contacts, measure units, etc.)
-  - `catalog`: Domain models and entities specific to the railway catalog (manufacturers, manufacturers, railways, scales, catalog items)
+  - `catalog`: Domain models and entities specific to the railway catalog (manufacturers, railways, scales, catalog items)
   - `configuration`: Application configuration loading from files and environment variables
   - `data`: Data access layer (database repositories and queries using sqlx)
 

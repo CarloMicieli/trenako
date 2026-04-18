@@ -1,4 +1,4 @@
-use crate::catalog::manufacturers::routes::BRANDS_ROOT_API;
+use crate::catalog::manufacturers::routes::MANUFACTURERS_ROOT_API;
 use crate::state::AppState;
 use crate::web::problem::ProblemDetail;
 use crate::web::responders::{Created, ToProblemDetail};
@@ -20,7 +20,7 @@ pub async fn handle(
     let result = create_new_manufacturer(request, repo, database).await;
     result
         .map(|created| {
-            let location = format!("{}/{}", BRANDS_ROOT_API, created.manufacturer_id);
+            let location = format!("{}/{}", MANUFACTURERS_ROOT_API, created.manufacturer_id);
             Created::with_location(&location)
         })
         .map_err(|why| why.to_problem_detail(Uuid::new_v4(), None))

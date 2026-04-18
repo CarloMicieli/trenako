@@ -121,7 +121,7 @@ pub struct Validators {
 impl Validators {
     /// Creates a new schema validator for the dataset resources
     pub fn new() -> Result<Self, ValidatorError> {
-        let manufacturers = JsonSchemaValidator::new(schemas::BRANDS_SCHEMA)?;
+        let manufacturers = JsonSchemaValidator::new(schemas::MANUFACTURERS_SCHEMA)?;
         let catalog_items = JsonSchemaValidator::new(schemas::CATALOG_ITEMS_SCHEMA)?;
         let railways = JsonSchemaValidator::new(schemas::RAILWAYS_SCHEMA)?;
         let scales = JsonSchemaValidator::new(schemas::SCALES_SCHEMA)?;
@@ -156,7 +156,7 @@ mod test {
 
         #[test]
         fn it_should_parse_the_json_schemas() {
-            assert!(json_schema_from_str(schemas::BRANDS_SCHEMA).is_ok());
+            assert!(json_schema_from_str(schemas::MANUFACTURERS_SCHEMA).is_ok());
             assert!(json_schema_from_str(schemas::CATALOG_ITEMS_SCHEMA).is_ok());
             assert!(json_schema_from_str(schemas::RAILWAYS_SCHEMA).is_ok());
             assert!(json_schema_from_str(schemas::SCALES_SCHEMA).is_ok());

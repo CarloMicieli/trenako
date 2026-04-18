@@ -21,5 +21,5 @@ pub async fn handle(
     let result = find_manufacturer_by_id(&manufacturer_id, repo, database).await;
     result
         .map(|manufacturer| EntityModel::of(manufacturer, vec![]))
-        .map_err(|why| why.to_problem_detail(Uuid::new_v4(), Some(routes::BRANDS_ROOT_API)))
+        .map_err(|why| why.to_problem_detail(Uuid::new_v4(), Some(routes::MANUFACTURERS_ROOT_API)))
 }
