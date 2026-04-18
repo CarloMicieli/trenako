@@ -5,8 +5,10 @@ use axum;
 use axum::Router;
 use axum::routing::get;
 use axum_prometheus::PrometheusMetricLayer;
+use axum_prometheus::metrics_exporter_prometheus::{PrometheusBuilder, PrometheusHandle};
 use configuration::Settings;
 use hyper::http::HeaderName;
+use std::sync::OnceLock;
 use tokio::net::TcpListener;
 use tower_http::LatencyUnit;
 use tower_http::compression::CompressionLayer;
@@ -15,6 +17,8 @@ use tower_http::request_id::{MakeRequestUuid, SetRequestIdLayer};
 use tower_http::trace::{DefaultMakeSpan, DefaultOnRequest, DefaultOnResponse, TraceLayer};
 use tracing::Level;
 
+static METRIC_HANDLE: OnceLock<PrometheusHandle> = OnceLock::new();
+
 /// Run the web server
 pub async fn run(tcp_listener: TcpListener, settings: &Settings) {
     axum::serve(tcp_listener, build_app(settings)).await.unwrap();
@@ -22,16 +26,24 @@ pub async fn run(tcp_listener: TcpListener, settings: &Settings) {
 
 pub fn build_app(settings: &Settings) -> Router {
     let app_state = AppState::from_settings(settings);
-    let (prometheus_layer, metric_handle) = PrometheusMetricLayer::pair();
-    let management_router = Router::new()
-        .route("/health-check", get(health_check::handler))
-        .route(
-            "/metrics",
-            get(move || {
-                let metric_handle = metric_handle.clone();
-                async move { metric_handle.render() }
-            }),
-        );
+    let prometheus_layer = PrometheusMetricLayer::new();
+    let metric_handle = METRIC_HANDLE
+        .get_or_init(|| {
+            PrometheusBuilder::new()
+                .install_recorder()
+                .expect("failed to install prometheus recorder")
+        })
+        .clone();
+    let management_router = Router::new().route("/health-check", get(health_check::handler)).route(
+        "/metrics",
+        get(move || {
+            let metric_handle = metric_handle.clone();
+            async move {
+                metric_handle.run_upkeep();
+                metric_handle.render()
+            }
+        }),
+    );
 
     let x_request_id = HeaderName::from_static("x-request-id");
 
