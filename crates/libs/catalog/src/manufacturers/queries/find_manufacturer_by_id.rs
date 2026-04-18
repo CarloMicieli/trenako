@@ -5,7 +5,11 @@ use common::queries::errors::{DatabaseError, QueryError};
 use common::unit_of_work::{Database, UnitOfWork};
 
 /// The query to find a modelling manufacturer by its `manufacturer_id`
-pub async fn find_manufacturer_by_id<'db, U, Repo, DB>(manufacturer_id: &ManufacturerId, repo: Repo, db: DB) -> Result<Manufacturer, QueryError>
+pub async fn find_manufacturer_by_id<'db, U, Repo, DB>(
+    manufacturer_id: &ManufacturerId,
+    repo: Repo,
+    db: DB,
+) -> Result<Manufacturer, QueryError>
 where
     U: UnitOfWork<'db>,
     Repo: FindManufacturerByIdRepository<'db, U>,
@@ -27,7 +31,11 @@ where
 /// The find manufacturer by id repository
 #[async_trait]
 pub trait FindManufacturerByIdRepository<'db, U: UnitOfWork<'db>> {
-    async fn find_by_id(&self, manufacturer_id: &ManufacturerId, unit_of_work: &mut U) -> Result<Option<Manufacturer>, DatabaseError>;
+    async fn find_by_id(
+        &self,
+        manufacturer_id: &ManufacturerId,
+        unit_of_work: &mut U,
+    ) -> Result<Option<Manufacturer>, DatabaseError>;
 }
 
 #[cfg(test)]

@@ -1,12 +1,12 @@
 use crate::catalog::manufacturers::manufacturer_row::ManufacturerRow;
 use anyhow::Context;
 use async_trait::async_trait;
+use catalog::manufacturers::commands::new_manufacturer::NewManufacturerCommand;
+use catalog::manufacturers::commands::repositories::NewManufacturerRepository;
 use catalog::manufacturers::manufacturer::Manufacturer;
 use catalog::manufacturers::manufacturer_id::ManufacturerId;
 use catalog::manufacturers::manufacturer_kind::ManufacturerKind;
 use catalog::manufacturers::manufacturer_status::ManufacturerStatus;
-use catalog::manufacturers::commands::new_manufacturer::NewManufacturerCommand;
-use catalog::manufacturers::commands::repositories::NewManufacturerRepository;
 use catalog::manufacturers::queries::find_all_manufacturers::FindAllManufacturersRepository;
 use catalog::manufacturers::queries::find_manufacturer_by_id::FindManufacturerByIdRepository;
 use common::contacts::WebsiteUrl;
@@ -22,16 +22,27 @@ pub struct ManufacturersRepository;
 
 #[async_trait]
 impl<'db> NewManufacturerRepository<'db, PgUnitOfWork<'db>> for ManufacturersRepository {
-    async fn exists(&self, manufacturer_id: &ManufacturerId, unit_of_work: &mut PgUnitOfWork) -> Result<bool, anyhow::Error> {
-        let result = sqlx::query!("SELECT manufacturer_id FROM manufacturers WHERE manufacturer_id = $1 LIMIT 1", manufacturer_id)
-            .fetch_optional(&mut *unit_of_work.transaction)
-            .await
-            .context("A database failure was encountered while trying to check for a manufacturer existence.")?;
+    async fn exists(
+        &self,
+        manufacturer_id: &ManufacturerId,
+        unit_of_work: &mut PgUnitOfWork,
+    ) -> Result<bool, anyhow::Error> {
+        let result = sqlx::query!(
+            "SELECT manufacturer_id FROM manufacturers WHERE manufacturer_id = $1 LIMIT 1",
+            manufacturer_id
+        )
+        .fetch_optional(&mut *unit_of_work.transaction)
+        .await
+        .context("A database failure was encountered while trying to check for a manufacturer existence.")?;
 
         Ok(result.is_some())
     }
 
-    async fn insert(&self, new_manufacturer: &NewManufacturerCommand, unit_of_work: &mut PgUnitOfWork) -> Result<(), anyhow::Error> {
+    async fn insert(
+        &self,
+        new_manufacturer: &NewManufacturerCommand,
+        unit_of_work: &mut PgUnitOfWork,
+    ) -> Result<(), anyhow::Error> {
         let manufacturer_id = &new_manufacturer.manufacturer_id;
         let request = &new_manufacturer.payload;
         let metadata = &new_manufacturer.metadata;

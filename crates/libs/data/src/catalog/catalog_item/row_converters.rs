@@ -246,11 +246,11 @@ mod test {
     mod catalog_item_converter {
         use super::*;
         use crate::catalog::catalog_item::catalog_item_row::test::new_catalog_item_row;
-        use catalog::manufacturers::manufacturer_id::ManufacturerId;
         use catalog::catalog_items::availability_status::AvailabilityStatus;
         use catalog::catalog_items::catalog_item_id::CatalogItemId;
         use catalog::catalog_items::category::Category;
         use catalog::catalog_items::power_method::PowerMethod;
+        use catalog::manufacturers::manufacturer_id::ManufacturerId;
         use catalog::scales::scale_id::ScaleId;
         use chrono::Utc;
         use pretty_assertions::assert_eq;

@@ -8,9 +8,9 @@
 //! - railway companies
 //! - modeling scales
 
-pub mod manufacturers;
 pub mod catalog_items;
 pub mod common;
+pub mod manufacturers;
 pub mod railways;
 pub mod scales;
 

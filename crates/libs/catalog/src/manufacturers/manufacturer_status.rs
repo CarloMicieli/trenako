@@ -32,7 +32,10 @@ mod tests {
         #[case("ACTIVE", Ok(ManufacturerStatus::Active))]
         #[case("OUT_OF_BUSINESS", Ok(ManufacturerStatus::OutOfBusiness))]
         #[case("invalid", Err(ParseError::VariantNotFound))]
-        fn it_should_parse_manufacturer_statuses(#[case] input: &str, #[case] expected: Result<ManufacturerStatus, ParseError>) {
+        fn it_should_parse_manufacturer_statuses(
+            #[case] input: &str,
+            #[case] expected: Result<ManufacturerStatus, ParseError>,
+        ) {
             let status = input.parse::<ManufacturerStatus>();
             assert_eq!(expected, status);
         }

@@ -1,8 +1,7 @@
 use crate::common::database::start_postgres;
-use crate::common::seeding::{seed_manufacturers, seed_catalog_items, seed_railways, seed_scales};
+use crate::common::seeding::{seed_catalog_items, seed_manufacturers, seed_railways, seed_scales};
 use crate::common::spawn_app;
 use crate::common::templates::{render, setup_hbs};
-use catalog::manufacturers::manufacturer_id::ManufacturerId;
 use catalog::catalog_items::availability_status::AvailabilityStatus;
 use catalog::catalog_items::catalog_item::CatalogItem;
 use catalog::catalog_items::catalog_item_id::CatalogItemId;
@@ -18,6 +17,7 @@ use catalog::catalog_items::rolling_stock::RollingStock;
 use catalog::catalog_items::rolling_stock_id::RollingStockId;
 use catalog::catalog_items::service_level::ServiceLevel;
 use catalog::catalog_items::technical_specifications::{BodyShellType, ChassisType, CouplingSocket, FeatureFlag};
+use catalog::manufacturers::manufacturer_id::ManufacturerId;
 use catalog::railways::railway_id::RailwayId;
 use catalog::scales::scale_id::ScaleId;
 use reqwest::StatusCode;

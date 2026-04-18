@@ -2,7 +2,6 @@ use crate::catalog::catalog_item::catalog_item_row::CatalogItemRow;
 use crate::catalog::catalog_item::rolling_stock_row::RollingStockRow;
 use anyhow::Context;
 use async_trait::async_trait;
-use catalog::manufacturers::manufacturer_id::ManufacturerId;
 use catalog::catalog_items::availability_status::AvailabilityStatus;
 use catalog::catalog_items::catalog_item::CatalogItem;
 use catalog::catalog_items::catalog_item_id::CatalogItemId;
@@ -21,6 +20,7 @@ use catalog::catalog_items::rolling_stock::RollingStock;
 use catalog::catalog_items::rolling_stock_id::RollingStockId;
 use catalog::catalog_items::service_level::ServiceLevel;
 use catalog::catalog_items::technical_specifications::{BodyShellType, ChassisType, CouplingSocket, FeatureFlag};
+use catalog::manufacturers::manufacturer_id::ManufacturerId;
 use catalog::railways::railway_id::RailwayId;
 use catalog::scales::scale_id::ScaleId;
 use common::queries::converters::ToOutputConverter;
@@ -119,10 +119,13 @@ impl<'db> NewCatalogItemRepository<'db, PgUnitOfWork<'db>> for CatalogItemsRepos
         manufacturer_id: &ManufacturerId,
         unit_of_work: &mut PgUnitOfWork<'db>,
     ) -> Result<bool, anyhow::Error> {
-        let result = sqlx::query!("SELECT manufacturer_id FROM manufacturers WHERE manufacturer_id = $1 LIMIT 1", manufacturer_id)
-            .fetch_optional(&mut *unit_of_work.transaction)
-            .await
-            .context("A database failure was encountered while trying to check for manufacturer existence.")?;
+        let result = sqlx::query!(
+            "SELECT manufacturer_id FROM manufacturers WHERE manufacturer_id = $1 LIMIT 1",
+            manufacturer_id
+        )
+        .fetch_optional(&mut *unit_of_work.transaction)
+        .await
+        .context("A database failure was encountered while trying to check for manufacturer existence.")?;
 
         Ok(result.is_some())
     }

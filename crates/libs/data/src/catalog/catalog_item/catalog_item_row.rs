@@ -1,10 +1,10 @@
 //! the catalog items row definition
 
-use catalog::manufacturers::manufacturer_id::ManufacturerId;
 use catalog::catalog_items::availability_status::AvailabilityStatus;
 use catalog::catalog_items::catalog_item_id::CatalogItemId;
 use catalog::catalog_items::category::Category;
 use catalog::catalog_items::power_method::PowerMethod;
+use catalog::manufacturers::manufacturer_id::ManufacturerId;
 use catalog::scales::scale_id::ScaleId;
 use chrono::{DateTime, Utc};
 

@@ -1,4 +1,3 @@
-use crate::manufacturers::manufacturer_id::ManufacturerId;
 use crate::catalog_items::availability_status::AvailabilityStatus;
 use crate::catalog_items::catalog_item_id::CatalogItemId;
 use crate::catalog_items::catalog_item_request::CatalogItemRequest;
@@ -19,6 +18,7 @@ use crate::catalog_items::service_level::ServiceLevel;
 use crate::catalog_items::technical_specifications::{
     BodyShellType, ChassisType, Coupling, CouplingSocket, FeatureFlag, Radius,
 };
+use crate::manufacturers::manufacturer_id::ManufacturerId;
 use crate::railways::railway_id::RailwayId;
 use crate::scales::scale_id::ScaleId;
 use chrono::Utc;
@@ -451,7 +451,6 @@ mod test {
     use common::localized_text::LocalizedText;
 
     mod new_catalog_item_command {
-        use crate::manufacturers::manufacturer_id::ManufacturerId;
         use crate::catalog_items::catalog_item_id::CatalogItemId;
         use crate::catalog_items::commands::new_catalog_item::test::{catalog_item, new_catalog_item};
         use crate::catalog_items::commands::new_catalog_item::{CatalogItemCreationError, create_new_catalog_item};
@@ -459,6 +458,7 @@ mod test {
             InMemoryCatalogItemRepository, InMemoryRollingStockRepository,
         };
         use crate::catalog_items::item_number::ItemNumber;
+        use crate::manufacturers::manufacturer_id::ManufacturerId;
         use crate::railways::railway_id::RailwayId;
         use crate::scales::scale_id::ScaleId;
         use common::unit_of_work::noop::NoOpDatabase;
@@ -475,7 +475,9 @@ mod test {
             assert!(result.is_err());
 
             match result {
-                Err(CatalogItemCreationError::ManufacturerNotFound(manufacturer)) => assert_eq!(ManufacturerId::new("ACME"), manufacturer),
+                Err(CatalogItemCreationError::ManufacturerNotFound(manufacturer)) => {
+                    assert_eq!(ManufacturerId::new("ACME"), manufacturer)
+                }
                 _ => panic!("CatalogItemCreationError::ManufacturerNotFound is expected (found: {result:?})"),
             }
         }
@@ -499,8 +501,10 @@ mod test {
 
         #[tokio::test]
         async fn it_should_return_an_error_when_the_catalog_item_already_exists() {
-            let repo =
-                InMemoryCatalogItemRepository::with(catalog_item(ManufacturerId::new("ACME"), ItemNumber::new("123456")));
+            let repo = InMemoryCatalogItemRepository::with(catalog_item(
+                ManufacturerId::new("ACME"),
+                ItemNumber::new("123456"),
+            ));
             let rr_repo = InMemoryRollingStockRepository::empty();
             let db = NoOpDatabase;
 

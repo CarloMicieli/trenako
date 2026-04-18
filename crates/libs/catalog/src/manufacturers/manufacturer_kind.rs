@@ -36,7 +36,10 @@ mod tests {
         #[case("BRASS_MODELS", Ok(ManufacturerKind::BrassModels))]
         #[case("INDUSTRIAL", Ok(ManufacturerKind::Industrial))]
         #[case("invalid", Err(ParseError::VariantNotFound))]
-        fn it_should_parse_manufacturer_kinds(#[case] input: &str, #[case] expected: Result<ManufacturerKind, ParseError>) {
+        fn it_should_parse_manufacturer_kinds(
+            #[case] input: &str,
+            #[case] expected: Result<ManufacturerKind, ParseError>,
+        ) {
             let manufacturer_kind = input.parse::<ManufacturerKind>();
             assert_eq!(expected, manufacturer_kind);
         }

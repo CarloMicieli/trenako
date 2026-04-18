@@ -1,6 +1,6 @@
-use crate::manufacturers::manufacturer_id::ManufacturerId;
 use crate::catalog_items::catalog_item_id::CatalogItemId;
 use crate::catalog_items::commands::new_catalog_item::{NewCatalogItemCommand, NewRollingStockCommand};
+use crate::manufacturers::manufacturer_id::ManufacturerId;
 use crate::railways::railway_id::RailwayId;
 use crate::scales::scale_id::ScaleId;
 use async_trait::async_trait;
@@ -16,7 +16,11 @@ pub trait NewCatalogItemRepository<'db, U: UnitOfWork<'db>> {
     async fn insert(&self, new_item: &NewCatalogItemCommand, unit_of_work: &mut U) -> Result<(), anyhow::Error>;
 
     /// Checks if the manufacturer exists
-    async fn manufacturer_exists(&self, manufacturer_id: &ManufacturerId, unit_of_work: &mut U) -> Result<bool, anyhow::Error>;
+    async fn manufacturer_exists(
+        &self,
+        manufacturer_id: &ManufacturerId,
+        unit_of_work: &mut U,
+    ) -> Result<bool, anyhow::Error>;
 
     /// Checks if the scale exists
     async fn scale_exists(&self, scale_id: &ScaleId, unit_of_work: &mut U) -> Result<bool, anyhow::Error>;
@@ -34,11 +38,11 @@ pub trait NewRollingStockRepository<'db, U: UnitOfWork<'db>> {
 
 #[cfg(test)]
 pub mod in_memory {
-    use crate::manufacturers::manufacturer_id::ManufacturerId;
     use crate::catalog_items::catalog_item_id::CatalogItemId;
     use crate::catalog_items::commands::new_catalog_item::{NewCatalogItemCommand, NewRollingStockCommand};
     use crate::catalog_items::commands::repositories::{NewCatalogItemRepository, NewRollingStockRepository};
     use crate::catalog_items::rolling_stock_id::RollingStockId;
+    use crate::manufacturers::manufacturer_id::ManufacturerId;
     use crate::railways::railway_id::RailwayId;
     use crate::scales::scale_id::ScaleId;
     use async_trait::async_trait;

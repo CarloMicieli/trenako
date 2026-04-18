@@ -1,8 +1,8 @@
 //! the catalog item identifier
 
-use crate::manufacturers::manufacturer_id::ManufacturerId;
 use crate::catalog_items::catalog_item::CatalogItemManufacturer;
 use crate::catalog_items::item_number::ItemNumber;
+use crate::manufacturers::manufacturer_id::ManufacturerId;
 use common::slug::{Slug, SlugParserError};
 use sqlx::Type;
 use std::fmt;

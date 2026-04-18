@@ -1,11 +1,11 @@
 //! the new manufacturer creation command
 
+use crate::manufacturers::commands::repositories::NewManufacturerRepository;
 use crate::manufacturers::manufacturer_id::ManufacturerId;
 use crate::manufacturers::manufacturer_kind::ManufacturerKind;
 use crate::manufacturers::manufacturer_request::ManufacturerRequest;
 use crate::manufacturers::manufacturer_response::ManufacturerCreated;
 use crate::manufacturers::manufacturer_status::ManufacturerStatus;
-use crate::manufacturers::commands::repositories::NewManufacturerRepository;
 use chrono::Utc;
 use common::address::Address;
 use common::contacts::{ContactInformation, MailAddress, PhoneNumber, WebsiteUrl};
@@ -21,7 +21,11 @@ use validator::{Validate, ValidationErrors};
 
 pub type Result<R> = result::Result<R, ManufacturerCreationError>;
 
-pub async fn create_new_manufacturer<'db, U, Repo, DB>(request: ManufacturerRequest, repo: Repo, db: DB) -> Result<ManufacturerCreated>
+pub async fn create_new_manufacturer<'db, U, Repo, DB>(
+    request: ManufacturerRequest,
+    repo: Repo,
+    db: DB,
+) -> Result<ManufacturerCreated>
 where
     U: UnitOfWork<'db>,
     Repo: NewManufacturerRepository<'db, U>,
@@ -226,7 +230,9 @@ mod test {
             let result = create_new_manufacturer(request, repo, db).await;
 
             match result {
-                Err(ManufacturerCreationError::ManufacturerAlreadyExists(id)) => assert_eq!(ManufacturerId::new("ACME"), id),
+                Err(ManufacturerCreationError::ManufacturerAlreadyExists(id)) => {
+                    assert_eq!(ManufacturerId::new("ACME"), id)
+                }
                 _ => panic!("ManufacturerAlreadyExists is expected (found: {:?})", result),
             }
         }

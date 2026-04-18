@@ -57,9 +57,9 @@ mod test {
         use super::*;
         use anyhow::anyhow;
         use axum::http::StatusCode;
-        use catalog::manufacturers::manufacturer_id::ManufacturerId;
         use catalog::catalog_items::catalog_item_id::CatalogItemId;
         use catalog::catalog_items::item_number::ItemNumber;
+        use catalog::manufacturers::manufacturer_id::ManufacturerId;
         use catalog::railways::railway_id::RailwayId;
         use catalog::scales::scale_id::ScaleId;
         use common::queries::errors::DatabaseError;

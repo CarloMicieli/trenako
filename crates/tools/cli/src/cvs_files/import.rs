@@ -1,9 +1,9 @@
 use crate::csv_record::CsvRecord;
 use anyhow::Context;
-use catalog::manufacturers::manufacturer_id::ManufacturerId;
 use catalog::catalog_items::catalog_item_id::CatalogItemId;
 use catalog::catalog_items::catalog_item_request::CatalogItemRequest;
 use catalog::catalog_items::rolling_stock_request::RollingStockRequest;
+use catalog::manufacturers::manufacturer_id::ManufacturerId;
 use itertools::Itertools;
 use std::collections::HashMap;
 use std::fs::File;

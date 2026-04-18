@@ -1,4 +1,3 @@
-use crate::manufacturers::manufacturer_id::ManufacturerId;
 use crate::catalog_items::availability_status::AvailabilityStatus;
 use crate::catalog_items::catalog_item::{CatalogItem, CatalogItemManufacturer, CatalogItemScale};
 use crate::catalog_items::catalog_item_id::CatalogItemId;
@@ -11,6 +10,7 @@ use crate::catalog_items::length_over_buffers::LengthOverBuffers;
 use crate::catalog_items::power_method::PowerMethod;
 use crate::catalog_items::rolling_stock::{RollingStock, RollingStockRailway};
 use crate::catalog_items::rolling_stock_id::RollingStockId;
+use crate::manufacturers::manufacturer_id::ManufacturerId;
 use crate::railways::railway_id::RailwayId;
 use crate::scales::scale_id::ScaleId;
 use chrono::prelude::*;

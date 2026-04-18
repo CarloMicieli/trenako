@@ -1,7 +1,5 @@
 //! the catalog item view model
 
-use crate::manufacturers::manufacturer::Manufacturer;
-use crate::manufacturers::manufacturer_id::ManufacturerId;
 use crate::catalog_items::availability_status::AvailabilityStatus;
 use crate::catalog_items::catalog_item_id::CatalogItemId;
 use crate::catalog_items::category::Category;
@@ -10,6 +8,8 @@ use crate::catalog_items::epoch::Epoch;
 use crate::catalog_items::item_number::ItemNumber;
 use crate::catalog_items::power_method::PowerMethod;
 use crate::catalog_items::rolling_stock::RollingStock;
+use crate::manufacturers::manufacturer::Manufacturer;
+use crate::manufacturers::manufacturer_id::ManufacturerId;
 use crate::scales::scale::Scale;
 use crate::scales::scale_id::ScaleId;
 use common::localized_text::LocalizedText;

@@ -4,8 +4,8 @@ use crate::web::problem::ProblemDetail;
 use crate::web::responders::{Created, ToProblemDetail};
 use axum::Json;
 use axum::extract::State;
-use catalog::manufacturers::manufacturer_request::ManufacturerRequest;
 use catalog::manufacturers::commands::new_manufacturer::{ManufacturerCreationError, create_new_manufacturer};
+use catalog::manufacturers::manufacturer_request::ManufacturerRequest;
 use data::catalog::manufacturers::repositories::ManufacturersRepository;
 use uuid::Uuid;
 

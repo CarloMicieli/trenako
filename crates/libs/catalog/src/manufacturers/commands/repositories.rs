@@ -1,7 +1,7 @@
 //! the manufacturer command repositories
 
-use crate::manufacturers::manufacturer_id::ManufacturerId;
 use crate::manufacturers::commands::new_manufacturer::NewManufacturerCommand;
+use crate::manufacturers::manufacturer_id::ManufacturerId;
 use async_trait::async_trait;
 use common::unit_of_work::UnitOfWork;
 
@@ -12,14 +12,18 @@ pub trait NewManufacturerRepository<'db, U: UnitOfWork<'db>> {
     async fn exists(&self, manufacturer_id: &ManufacturerId, unit_of_work: &mut U) -> Result<bool, anyhow::Error>;
 
     /// Inserts a new manufacturer
-    async fn insert(&self, new_manufacturer: &NewManufacturerCommand, unit_of_work: &mut U) -> Result<(), anyhow::Error>;
+    async fn insert(
+        &self,
+        new_manufacturer: &NewManufacturerCommand,
+        unit_of_work: &mut U,
+    ) -> Result<(), anyhow::Error>;
 }
 
 #[cfg(test)]
 pub mod in_memory {
-    use crate::manufacturers::manufacturer_id::ManufacturerId;
     use crate::manufacturers::commands::new_manufacturer::NewManufacturerCommand;
     use crate::manufacturers::commands::repositories::NewManufacturerRepository;
+    use crate::manufacturers::manufacturer_id::ManufacturerId;
     use async_trait::async_trait;
     use common::in_memory::InMemoryRepository;
     use common::unit_of_work::noop::NoOpUnitOfWork;
@@ -42,7 +46,11 @@ pub mod in_memory {
 
     #[async_trait]
     impl NewManufacturerRepository<'static, NoOpUnitOfWork> for InMemoryManufacturerRepository {
-        async fn exists(&self, manufacturer_id: &ManufacturerId, _unit_of_work: &mut NoOpUnitOfWork) -> Result<bool, anyhow::Error> {
+        async fn exists(
+            &self,
+            manufacturer_id: &ManufacturerId,
+            _unit_of_work: &mut NoOpUnitOfWork,
+        ) -> Result<bool, anyhow::Error> {
             Ok(self.0.contains(manufacturer_id))
         }
 
