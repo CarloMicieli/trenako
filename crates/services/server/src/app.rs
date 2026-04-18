@@ -26,7 +26,6 @@ pub async fn run(tcp_listener: TcpListener, settings: &Settings) {
 
 pub fn build_app(settings: &Settings) -> Router {
     let app_state = AppState::from_settings(settings);
-    let prometheus_layer = PrometheusMetricLayer::new();
     let metric_handle = METRIC_HANDLE
         .get_or_init(|| {
             PrometheusBuilder::new()
@@ -34,6 +33,7 @@ pub fn build_app(settings: &Settings) -> Router {
                 .expect("failed to install Prometheus recorder; a global recorder may already be installed")
         })
         .clone();
+    let prometheus_layer = PrometheusMetricLayer::new();
     let management_router = Router::new().route("/health-check", get(health_check::handler)).route(
         "/metrics",
         get(move || {
