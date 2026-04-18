@@ -23,12 +23,14 @@ data            = { path = "../../libs/data" }
 anyhow              = { workspace = true }
 async-trait         = { workspace = true }
 axum                = { workspace = true }
+axum-prometheus     = { workspace = true }
 axum-macros         = { workspace = true }
 chrono              = { workspace = true }
 http-body-util      = { workspace = true }
 hyper               = { workspace = true }
 lazy_static         = { workspace = true }
 mime                = { workspace = true }
+metrics             = { workspace = true }
 regex               = { workspace = true }
 rust_decimal        = { workspace = true }
 serde               = { workspace = true }

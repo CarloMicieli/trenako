@@ -4,6 +4,7 @@ use crate::state::AppState;
 use axum;
 use axum::Router;
 use axum::routing::get;
+use axum_prometheus::PrometheusMetricLayer;
 use configuration::Settings;
 use hyper::http::HeaderName;
 use tokio::net::TcpListener;
@@ -21,13 +22,23 @@ pub async fn run(tcp_listener: TcpListener, settings: &Settings) {
 
 pub fn build_app(settings: &Settings) -> Router {
     let app_state = AppState::from_settings(settings);
-    let management_router = Router::new().route("/health-check", get(health_check::handler));
+    let (prometheus_layer, metric_handle) = PrometheusMetricLayer::pair();
+    let management_router = Router::new()
+        .route("/health-check", get(health_check::handler))
+        .route(
+            "/metrics",
+            get(move || {
+                let metric_handle = metric_handle.clone();
+                async move { metric_handle.render() }
+            }),
+        );
 
     let x_request_id = HeaderName::from_static("x-request-id");
 
     catalog_router()
         .merge(management_router)
         .with_state(app_state.clone())
+        .layer(prometheus_layer)
         .layer(
             TraceLayer::new_for_http()
                 .make_span_with(DefaultMakeSpan::new().include_headers(true).level(Level::INFO))
