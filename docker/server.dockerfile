@@ -34,7 +34,7 @@ COPY --from=planner /app/recipe.json ./recipe.json
 RUN --mount=type=cache,target=/app/target/,id=rust-chef-${APP_NAME}-${TARGETPLATFORM} \
     --mount=type=cache,target=/usr/local/cargo/git/db \
     --mount=type=cache,target=/usr/local/cargo/registry/ \
-    cargo chef cook --locked --release --recipe-path recipe.json --target-dir ./target
+    cargo chef cook --locked --release --recipe-path recipe.json --target-dir /app/target
 
 COPY Cargo.toml .
 COPY Cargo.lock .
@@ -48,8 +48,8 @@ RUN --mount=type=cache,target=/app/target/,id=rust-cache-${APP_NAME}-${TARGETPLA
     --mount=type=cache,target=/usr/local/cargo/registry/ \
     <<EOF
 set -e
-cargo build --locked --release --bin trenako-server --target-dir ./target
-cp ./target/release/$APP_NAME /bin/server
+cargo build --locked --release --bin trenako-server --target-dir /app/target
+cp /app/target/release/$APP_NAME /bin/server
 EOF
 
 
