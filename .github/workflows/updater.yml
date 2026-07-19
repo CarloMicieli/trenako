@@ -16,6 +16,11 @@ jobs:
       - name: 📂 Checkout
         uses: actions/checkout@v4
 
+      - name: 🐳 Update Docker Compose Images
+        uses: megabyte-labs/docker-compose-update@v1
+        with:
+          file: docker-compose.yml
+
       - name: 🦀 Install Rust toolchain
         uses: dtolnay/rust-toolchain@1.95.0
 
