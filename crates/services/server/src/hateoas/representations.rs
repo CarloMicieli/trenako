@@ -32,11 +32,11 @@ pub struct EntityModel<T>
 where
     T: Serialize + PartialEq + Clone,
 {
-    #[serde(flatten)]
-    pub content: T,
-
     #[serde(rename = "_links")]
     pub links: Vec<Link>,
+
+    #[serde(flatten)]
+    pub content: T,
 }
 
 impl<T> EntityModel<T>
@@ -81,10 +81,10 @@ pub struct CollectionModel<T>
 where
     T: Serialize + PartialEq + Clone,
 {
-    pub items: Vec<T>,
-
     #[serde(rename = "_links")]
     pub links: Vec<Link>,
+
+    pub items: Vec<T>,
 }
 
 impl<T> CollectionModel<T>
