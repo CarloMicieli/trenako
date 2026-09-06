@@ -24,7 +24,7 @@ jobs:
       - name: 🐳 Check and Update Docker Base Images
         run: |
           python3 - << 'EOF'
-          import glob, re, urllib.request, json
+          import os, glob, re, urllib.request, json
 
           def get_latest_tag(repo):
               if '/' not in repo:
@@ -47,7 +47,6 @@ jobs:
               with open(file_path, 'r') as f:
                   content = f.read()
 
-              # Update FROM images in Dockerfiles and image: entries in compose files
               def replace_image(match):
                   prefix, image, current_tag = match.group(1), match.group(2), match.group(3)
                   latest_tag = get_latest_tag(image)
