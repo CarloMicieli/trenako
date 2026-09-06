@@ -16,11 +16,6 @@ jobs:
       - name: 📂 Checkout
         uses: actions/checkout@v4
 
-      - name: 🐳 Update Docker Compose Images
-        uses: megabyte-labs/docker-compose-update@v1
-        with:
-          file: docker-compose.yml
-
       - name: 🦀 Install Rust toolchain
         uses: dtolnay/rust-toolchain@1.95.0
 
@@ -30,14 +25,12 @@ jobs:
           tool: cargo-edit
 
       - name: 🚀 Upgrade Cargo.toml
-        # --pinned ensures we respect version pins if you have any
         run: cargo upgrade --pinned 
 
       - name: 🔒 Update Cargo.lock
         run: cargo update
 
       - name: ✅ Run Tests
-        # Crucial for Axum servers to ensure new versions don't break your routes/middleware
         run: cargo test
 
       - name: 📬 Create Pull Request
