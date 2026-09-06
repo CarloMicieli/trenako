@@ -1,0 +1,74 @@
+name: Weekly Docker Image Updates
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Runs every Sunday at 00:00 UTC
+  workflow_dispatch:
+
+jobs:
+  update-docker:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: 📂 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: 🐳 Check and Update Docker Base Images
+        run: |
+          python3 - << 'EOF'
+          import glob, re, urllib.request, json
+
+          def get_latest_tag(repo):
+              if '/' not in repo:
+                  repo = f"library/{repo}"
+              url = f"https://registry.hub.docker.com/v2/repositories/{repo}/tags?page_size=20"
+              try:
+                  req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+                  with urllib.request.urlopen(req) as resp:
+                      data = json.loads(resp.read().decode())
+                      # Filter out non-numeric/prerelease tags
+                      tags = [t['name'] for t in data.get('results', []) if re.match(r'^\d+(\.\d+)*$', t['name'])]
+                      return tags[0] if tags else None
+              except Exception:
+                  return None
+
+          files = glob.glob('docker-compose.yml') + glob.glob('docker/*')
+          for file_path in files:
+              if not os.path.isfile(file_path):
+                  continue
+              with open(file_path, 'r') as f:
+                  content = f.read()
+
+              # Update FROM images in Dockerfiles and image: entries in compose files
+              def replace_image(match):
+                  prefix, image, current_tag = match.group(1), match.group(2), match.group(3)
+                  latest_tag = get_latest_tag(image)
+                  if latest_tag and latest_tag != current_tag:
+                      print(f"[{file_path}] Updating {image}:{current_tag} -> {latest_tag}")
+                      return f"{prefix}{image}:{latest_tag}"
+                  return match.group(0)
+
+              updated_content = re.sub(r'(FROM\s+|image:\s*)([\w\/-]+):([\w\.-]+)', replace_image, content)
+              
+              with open(file_path, 'w') as f:
+                  f.write(updated_content)
+          EOF
+
+      - name: 📬 Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore(deps): update docker image tags'
+          title: 'chore(deps): weekly docker image updates'
+          body: |
+            Automated weekly check updating Docker base image tags across `docker-compose.yml` and files in `docker/`.
+          branch: automated-docker-update
+          delete-branch: true
