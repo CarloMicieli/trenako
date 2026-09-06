@@ -21,23 +21,57 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: 🐳 Check and Update Docker Base Images
+      - name: 🐳 Check and Update Docker Base Images with SHA256 Digests
         run: |
           python3 - << 'EOF'
           import os, glob, re, urllib.request, json
 
-          def get_latest_tag(repo):
+          def get_latest_tag(repo, current_tag):
+              clean_tag = current_tag.split('@')[0]
+              match = re.match(r'^(\d+)\.[\d\.]*(.*)$', clean_tag)
+              if not match:
+                  return None
+              
+              major_ver, suffix = match.group(1), match.group(2)
               if '/' not in repo:
                   repo = f"library/{repo}"
-              url = f"https://registry.hub.docker.com/v2/repositories/{repo}/tags?page_size=20"
+              
+              url = f"https://registry.hub.docker.com/v2/repositories/{repo}/tags?page_size=100"
               try:
                   req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
                   with urllib.request.urlopen(req) as resp:
                       data = json.loads(resp.read().decode())
-                      # Filter out non-numeric/prerelease tags
-                      tags = [t['name'] for t in data.get('results', []) if re.match(r'^\d+(\.\d+)*$', t['name'])]
-                      return tags[0] if tags else None
+                      results = [t['name'] for t in data.get('results', [])]
+                      matching_tags = [
+                          t for t in results 
+                          if t.startswith(f"{major_ver}.") and t.endswith(suffix) and '@' not in t
+                      ]
+                      return matching_tags[0] if matching_tags else None
               except Exception:
+                  return None
+
+          def get_sha256_digest(repo, tag):
+              if '/' not in repo:
+                  repo = f"library/{repo}"
+              try:
+                  # 1. Fetch anonymous authentication token
+                  token_url = f"https://auth.docker.io/token?service=registry.docker.io&scope=repository:{repo}:pull"
+                  req = urllib.request.Request(token_url, headers={'User-Agent': 'Mozilla/5.0'})
+                  with urllib.request.urlopen(req) as resp:
+                      token = json.loads(resp.read().decode())['token']
+
+                  # 2. Query manifest header for the content digest
+                  manifest_url = f"https://registry-1.docker.io/v2/{repo}/manifests/{tag}"
+                  headers = {
+                      'User-Agent': 'Mozilla/5.0',
+                      'Authorization': f'Bearer {token}',
+                      'Accept': 'application/vnd.docker.distribution.manifest.v2+json, application/vnd.oci.image.index.v1+json'
+                  }
+                  req = urllib.request.Request(manifest_url, headers=headers, method='HEAD')
+                  with urllib.request.urlopen(req) as resp:
+                      return resp.headers.get('Docker-Content-Digest')
+              except Exception as e:
+                  print(f"Failed to fetch digest for {repo}:{tag}: {e}")
                   return None
 
           files = glob.glob('docker-compose.yml') + glob.glob('docker/*')
@@ -48,14 +82,23 @@ jobs:
                   content = f.read()
 
               def replace_image(match):
-                  prefix, image, current_tag = match.group(1), match.group(2), match.group(3)
-                  latest_tag = get_latest_tag(image)
-                  if latest_tag and latest_tag != current_tag:
-                      print(f"[{file_path}] Updating {image}:{current_tag} -> {latest_tag}")
-                      return f"{prefix}{image}:{latest_tag}"
+                  prefix, image, full_spec = match.group(1), match.group(2), match.group(3)
+                  
+                  latest_tag = get_latest_tag(image, full_spec)
+                  if latest_tag:
+                      digest = get_sha256_digest(image, latest_tag)
+                      new_spec = f"{latest_tag}@{digest}" if digest else latest_tag
+                      
+                      if new_spec != full_spec:
+                          print(f"[{file_path}] Updating {image}:{full_spec} -> {image}:{new_spec}")
+                          return f"{prefix}{image}:{new_spec}"
                   return match.group(0)
 
-              updated_content = re.sub(r'(FROM\s+|image:\s*)([\w\/-]+):([\w\.-]+)', replace_image, content)
+              updated_content = re.sub(
+                  r'(FROM\s+|image:\s*)([\w\/-]+):([^\s]+)', 
+                  replace_image, 
+                  content
+              )
               
               with open(file_path, 'w') as f:
                   f.write(updated_content)
@@ -65,9 +108,9 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: 'chore(deps): update docker image tags'
+          commit-message: 'chore(deps): update docker image tags and sha256 digests'
           title: 'chore(deps): weekly docker image updates'
           body: |
-            Automated weekly check updating Docker base image tags across `docker-compose.yml` and files in `docker/`.
+            Automated weekly check updating Docker base image tags and SHA256 digests across `docker-compose.yml` and files in `docker/`.
           branch: automated-docker-update
           delete-branch: true
