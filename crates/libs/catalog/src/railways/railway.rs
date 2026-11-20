@@ -165,8 +165,8 @@ impl Railway {
 impl fmt::Display for Railway {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match &self.abbreviation {
-            Some(abbr) => write!(f, "{} ({})", abbr, &self.name),
-            None => write!(f, "{}", &self.name),
+            Some(abbr) => write!(f, "{} ({})", abbr, self.name),
+            None => write!(f, "{}", self.name),
         }
     }
 }

@@ -14,13 +14,13 @@ use uuid::Uuid;
 pub async fn handle(
     Path(scale_id): Path<ScaleId>,
     State(app_state): State<AppState>,
-) -> Result<EntityModel<Scale>, ProblemDetail> {
+) -> Result<EntityModel<Scale>, Box<ProblemDetail>> {
     let database = app_state.get_database();
     let repo = ScalesRepository;
 
     let result = find_scale_by_id(&scale_id, repo, database).await;
     result.map(|scale| EntityModel::of(scale, Vec::new())).map_err(|why| {
         let path = format!("{}/{}", routes::SCALE_ROOT_API, scale_id);
-        why.to_problem_detail(Uuid::new_v4(), Some(&path))
+        Box::new(why.to_problem_detail(Uuid::new_v4(), Some(&path)))
     })
 }

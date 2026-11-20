@@ -281,17 +281,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "axum-macros"
-version = "0.5.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7aa268c23bfbbd2c4363b9cd302a4f504fb2a9dfe7e3451d66f35dd392e20aca"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 2.0.119",
-]
-
-[[package]]
 name = "axum-prometheus"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -684,7 +673,6 @@ dependencies = [
  "serde",
  "serde_derive",
  "serde_json",
- "serde_urlencoded",
  "slug",
  "sqlx",
  "strum",
@@ -3587,7 +3575,6 @@ dependencies = [
  "anyhow",
  "async-trait",
  "axum",
- "axum-macros",
  "axum-prometheus",
  "catalog",
  "chrono",
@@ -3610,7 +3597,6 @@ dependencies = [
  "serde",
  "serde_derive",
  "serde_json",
- "serde_urlencoded",
  "sqlx",
  "testcontainers",
  "thiserror 2.0.21",

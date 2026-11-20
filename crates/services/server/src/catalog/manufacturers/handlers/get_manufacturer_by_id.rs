@@ -14,12 +14,12 @@ use uuid::Uuid;
 pub async fn handle(
     Path(manufacturer_id): Path<ManufacturerId>,
     State(app_state): State<AppState>,
-) -> Result<EntityModel<Manufacturer>, ProblemDetail> {
+) -> Result<EntityModel<Manufacturer>, Box<ProblemDetail>> {
     let database = app_state.get_database();
     let repo = ManufacturersRepository;
 
     let result = find_manufacturer_by_id(&manufacturer_id, repo, database).await;
     result
         .map(|manufacturer| EntityModel::of(manufacturer, vec![]))
-        .map_err(|why| why.to_problem_detail(Uuid::new_v4(), Some(routes::MANUFACTURERS_ROOT_API)))
+        .map_err(|why| Box::new(why.to_problem_detail(Uuid::new_v4(), Some(routes::MANUFACTURERS_ROOT_API))))
 }

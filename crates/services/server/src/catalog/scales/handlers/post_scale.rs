@@ -13,7 +13,7 @@ use uuid::Uuid;
 pub async fn handle(
     State(app_state): State<AppState>,
     Json(request): Json<ScaleRequest>,
-) -> Result<Created, ProblemDetail> {
+) -> Result<Created, Box<ProblemDetail>> {
     let repo = ScalesRepository;
     let database = app_state.get_database();
 
@@ -23,7 +23,7 @@ pub async fn handle(
             let location = format!("{}/{}", SCALE_ROOT_API, created.scale_id);
             Created::with_location(&location)
         })
-        .map_err(|why| why.to_problem_detail(Uuid::new_v4(), None))
+        .map_err(|why| Box::new(why.to_problem_detail(Uuid::new_v4(), None)))
 }
 
 impl ToProblemDetail for ScaleCreationError {

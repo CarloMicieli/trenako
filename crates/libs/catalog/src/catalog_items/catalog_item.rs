@@ -215,7 +215,7 @@ impl CatalogItemManufacturer {
 
 impl fmt::Display for CatalogItemManufacturer {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", &self.display)
+        write!(f, "{}", self.display)
     }
 }
 
@@ -259,7 +259,7 @@ impl CatalogItemScale {
 
 impl fmt::Display for CatalogItemScale {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", &self.display)
+        write!(f, "{}", self.display)
     }
 }
 

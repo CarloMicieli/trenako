@@ -123,7 +123,7 @@ impl Epoch {
 impl fmt::Display for Epoch {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
-            Epoch::Multiple(ep1, ep2) => write!(f, "{}/{}", &ep1, &ep2),
+            Epoch::Multiple(ep1, ep2) => write!(f, "{}/{}", ep1, ep2),
             _ => write!(f, "{self:?}"),
         }
     }

@@ -14,7 +14,7 @@ use uuid::Uuid;
 pub async fn handle(
     Path(catalog_item_id): Path<CatalogItemId>,
     State(app_state): State<AppState>,
-) -> Result<EntityModel<CatalogItem>, ProblemDetail> {
+) -> Result<EntityModel<CatalogItem>, Box<ProblemDetail>> {
     let database = app_state.get_database();
     let repo = CatalogItemsRepository;
 
@@ -23,6 +23,6 @@ pub async fn handle(
         .map(|catalog_item| EntityModel::of(catalog_item, Vec::new()))
         .map_err(|why| {
             let path = format!("{}/{}", routes::CATALOG_ITEMS_ROOT_API, catalog_item_id);
-            why.to_problem_detail(Uuid::new_v4(), Some(&path))
+            Box::new(why.to_problem_detail(Uuid::new_v4(), Some(&path)))
         })
 }

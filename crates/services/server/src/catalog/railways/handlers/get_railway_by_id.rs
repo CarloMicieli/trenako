@@ -14,7 +14,7 @@ use uuid::Uuid;
 pub async fn handle(
     Path(railway_id): Path<RailwayId>,
     State(app_state): State<AppState>,
-) -> Result<EntityModel<Railway>, ProblemDetail> {
+) -> Result<EntityModel<Railway>, Box<ProblemDetail>> {
     let database = app_state.get_database();
     let repo = RailwaysRepository;
 
@@ -23,6 +23,6 @@ pub async fn handle(
         .map(|railway| EntityModel::of(railway, Vec::new()))
         .map_err(|why| {
             let path = format!("{}/{}", routes::RAILWAY_ROOT_API, railway_id);
-            why.to_problem_detail(Uuid::new_v4(), Some(&path))
+            Box::new(why.to_problem_detail(Uuid::new_v4(), Some(&path)))
         })
 }

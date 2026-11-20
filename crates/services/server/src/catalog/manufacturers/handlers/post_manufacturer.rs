@@ -13,7 +13,7 @@ use uuid::Uuid;
 pub async fn handle(
     State(app_state): State<AppState>,
     Json(request): Json<ManufacturerRequest>,
-) -> Result<Created, ProblemDetail> {
+) -> Result<Created, Box<ProblemDetail>> {
     let repo = ManufacturersRepository;
     let database = app_state.get_database();
 
@@ -23,7 +23,7 @@ pub async fn handle(
             let location = format!("{}/{}", MANUFACTURERS_ROOT_API, created.manufacturer_id);
             Created::with_location(&location)
         })
-        .map_err(|why| why.to_problem_detail(Uuid::new_v4(), None))
+        .map_err(|why| Box::new(why.to_problem_detail(Uuid::new_v4(), None)))
 }
 
 impl ToProblemDetail for ManufacturerCreationError {
