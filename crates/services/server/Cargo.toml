@@ -24,7 +24,6 @@ anyhow              = { workspace = true }
 async-trait         = { workspace = true }
 axum                = { workspace = true }
 axum-prometheus     = { workspace = true }
-axum-macros         = { workspace = true }
 chrono              = { workspace = true }
 http-body-util      = { workspace = true }
 hyper               = { workspace = true }
@@ -35,7 +34,6 @@ regex               = { workspace = true }
 rust_decimal        = { workspace = true }
 serde               = { workspace = true }
 serde_json          = { workspace = true }
-serde_urlencoded    = { workspace = true }
 sqlx                = { workspace = true }
 thiserror           = { workspace = true }
 tokio               = { workspace = true }

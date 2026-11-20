@@ -11,13 +11,9 @@ resolver = "2"
 
 [workspace.package]
 authors         = ["CarloMicieli <piovarolo@gmail.com>"]
-documentation   = "https://github.com/CarloMicieli/trenako"
 edition         = "2024"
-homepage        = "https://github.com/CarloMicieli/trenako"
 license         = "Apache-2.0"
-readme          = "README.md"
-repository      = "https://github.com/CarloMicieli/trenako"
-rust-version    = "1.95"
+rust-version    = "1.100.0"
 version         = "0.1.0"
 
 [workspace.dependencies]
@@ -25,7 +21,6 @@ anyhow              = "1.0.104"
 async-trait         = "0.1.92"
 axum                = "0.8.9"
 axum-prometheus     = "0.9.0"
-axum-macros         = "0.5.1"
 chrono              = { version = "0.4.45", features = ["serde"] }
 clap                = { version = "4.6.9", features = ["derive"] }
 config              = { version = "0.15.27", default-features = false, features = ["yaml"] }
@@ -52,7 +47,6 @@ secrecy             = { version = "0.10.3", features = ["serde"] }
 serde               = { version = "1.0.229", features = ["derive"] }
 serde_derive        = "1.0.229"
 serde_json          = "1.0.154"
-serde_urlencoded    = "0.7.1"
 slug                = "0.1.6"
 strum               = "0.27.2"
 strum_macros        = "0.27.2"

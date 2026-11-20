@@ -25,8 +25,8 @@ pub fn import_catalog_items(
                     let category = &catalog_item.category.to_string().to_lowercase();
 
                     let dir = format!("{}/{}/{}", output, manufacturer, category);
-                    fs::create_dir_all(&dir).with_context(|| format!("unable to create the {} directory", &dir))?;
-                    let filename = format!("{}/{}.json", &dir, item_number);
+                    fs::create_dir_all(&dir).with_context(|| format!("unable to create the {} directory", dir))?;
+                    let filename = format!("{}/{}.json", dir, item_number);
                     println!("Writing {}...", filename);
 
                     fs::write(filename, json).unwrap(); //.with_context(|| format!("unable to write file"))?

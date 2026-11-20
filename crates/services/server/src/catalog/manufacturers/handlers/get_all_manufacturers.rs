@@ -14,12 +14,12 @@ use uuid::Uuid;
 pub async fn handle(
     Query(_page_request): Query<PageRequest>,
     State(app_state): State<AppState>,
-) -> Result<CollectionModel<Manufacturer>, ProblemDetail> {
+) -> Result<CollectionModel<Manufacturer>, Box<ProblemDetail>> {
     let database = app_state.get_database();
     let repo = ManufacturersRepository;
 
     let results = find_all_manufacturers(repo, database).await;
     results
         .map(|manufacturers| CollectionModel::of(manufacturers, Vec::new()))
-        .map_err(|why| why.to_problem_detail(Uuid::new_v4(), Some(routes::MANUFACTURERS_ROOT_API)))
+        .map_err(|why| Box::new(why.to_problem_detail(Uuid::new_v4(), Some(routes::MANUFACTURERS_ROOT_API))))
 }

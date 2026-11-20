@@ -16,7 +16,7 @@ async fn main() {
         .await
         .expect("Failed to bind port");
 
-    println!("{}", &BANNER_TEXT);
+    println!("{}", BANNER_TEXT);
     tracing::info!("Starting the server...");
     tracing::info!("{}", serde_json::to_string(&settings).unwrap());
     app::run(listener, &settings).await;

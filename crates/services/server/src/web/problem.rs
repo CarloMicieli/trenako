@@ -115,6 +115,12 @@ impl IntoResponse for ProblemDetail {
     }
 }
 
+impl IntoResponse for Box<ProblemDetail> {
+    fn into_response(self) -> Response {
+        (*self).into_response()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
