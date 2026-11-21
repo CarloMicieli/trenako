@@ -53,7 +53,7 @@ impl Database {
     }
 
     pub async fn apply_fixture(&self, sql: &str) {
-        sqlx::raw_sql(sql)
+        sqlx::raw_sql(sqlx::AssertSqlSafe(sql))
             .execute(&self.pg_pool())
             .await
             .expect("Failed to apply SQL fixture");
