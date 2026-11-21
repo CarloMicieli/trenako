@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:1
-ARG RUST_VERSION=1.95.0
-ARG RUST_IMAGE_SHA256=5cad7981952984a5c222b6715e1ee282f9bd98ffc53e44e069f7153d49293104
+ARG RUST_VERSION=1.100.0-slim-bookworm
+ARG RUST_IMAGE_SHA256=da8f30b996c2c5ced5f932bbf7ac6ced0a2a93db84c86f2f1eaf970c20a6a9f7
 ARG APP_NAME=trenako-cli
 ARG RUNTIME_IMAGE_SHA256=45287d89d96414e57c7705aa30cb8f9836ef30ae8897440dd8f06c4cff801eec
 
 ################################################################################
 # Create a stage for building the application.
-FROM rust:${RUST_VERSION}-slim-bookworm@sha256:${RUST_IMAGE_SHA256} as build
+FROM rust:${RUST_VERSION}@sha256:${RUST_IMAGE_SHA256} as build
 ARG APP_NAME
 WORKDIR /app
 
@@ -65,5 +65,4 @@ COPY --from=build /bin/trenako-cli /bin/
 
 USER appuser
 
-WORKDIR ${APP}
 ENTRYPOINT ["/bin/trenako-cli"]
