@@ -6,7 +6,7 @@ ARG RUNTIME_IMAGE_SHA256=45287d89d96414e57c7705aa30cb8f9836ef30ae8897440dd8f06c4
 
 ################################################################################
 # Create a stage for building the application.
-FROM rust:${RUST_VERSION}-bookworm@sha256:${RUST_IMAGE_SHA256} AS build
+FROM rust:${RUST_VERSION}@sha256:${RUST_IMAGE_SHA256} AS build
 ARG TARGETPLATFORM
 ARG APP_NAME
 WORKDIR /app
