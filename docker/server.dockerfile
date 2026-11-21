@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:1
-ARG RUST_VERSION=1.95.0
-ARG RUST_IMAGE_SHA256=5cad7981952984a5c222b6715e1ee282f9bd98ffc53e44e069f7153d49293104
+ARG RUST_VERSION=1.100.0-slim-trixie
+ARG RUST_IMAGE_SHA256=6f14b2b4b278ec0d50aa1d69541c304ce0f95e0f6268487aa9924af1c2e9aebe
 ARG APP_NAME=trenako-server
-ARG RUNTIME_IMAGE_SHA256=45287d89d96414e57c7705aa30cb8f9836ef30ae8897440dd8f06c4cff801eec
+ARG RUNTIME_IMAGE_SHA256=a72b4433de1cf7d6bae0c4cee74d0547f58601a643b3375f070c51600d63b6b2
 
 ################################################################################
 # Create a stage for preparing the cargo-chef binary.
-FROM rust:${RUST_VERSION}-slim-bookworm@sha256:${RUST_IMAGE_SHA256} AS chef
+FROM rust:${RUST_VERSION}@sha256:${RUST_IMAGE_SHA256} AS chef
 WORKDIR /app
 RUN cargo install --locked cargo-chef --version 0.1.73
 
@@ -63,7 +63,7 @@ EOF
 # By specifying the "3.18" tag, it will use version 3.18 of alpine. If
 # reproducability is important, consider using a digest
 # (e.g., alpine@sha256:664888ac9cfd28068e062c991ebcff4b4c7307dc8dd4df9e728bedde5c449d91).
-FROM debian:bookworm-slim@sha256:${RUNTIME_IMAGE_SHA256} AS runtime
+FROM debian:trixie-slim@sha256:${RUNTIME_IMAGE_SHA256} AS runtime
 LABEL maintainer="Carlo Micieli <mail@trenako.com>"
 LABEL description="The trenako web server"
 
@@ -74,7 +74,7 @@ ENV TZ=Etc/UTC \
     APP_USER=${APP_USER}
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates tzdata curl \
+    && apt-get install -y --no-install-recommends ca-certificates tzdata curl adduser \
     && rm -rf /var/lib/apt/lists/*
 
 # Create a non-privileged user that the app will run under.
@@ -95,7 +95,7 @@ RUN mkdir -p "${APP}/config" \
 USER ${APP_USER}
 
 HEALTHCHECK --interval=5m --timeout=3s \
-  CMD curl -f http://localhost/health-check || exit 1
+  CMD curl -f http://localhost:5000/health-check || exit 1
 
 # Copy the executable from the "build" stage.
 COPY --from=build /bin/server /bin/
